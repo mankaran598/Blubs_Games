@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0; /* Grey background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #ccc; /* Grey board background color */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+canvas {
+    border: 1px solid #999; /* Border color */
+    border-radius: 5px;
+}
