@@ -6,11 +6,10 @@
   <title>Snake Game</title>
    <style>
         body {
-            background-color: #808080; /* Grey color code */
+            background-color: #f0f0f0; /* Grey color code */
             /* You can adjust the shade of grey by changing the hex color code */
         }
     </style>
-
 </head>
 <body>
   <canvas id="gameCanvas" width="800" height="800"></canvas>
@@ -32,12 +31,12 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = 'green';
       snake.forEach((segment) => {
         ctx.fillRect(segment.x, segment.y, box, box);
       });
 
-      ctx.fillStyle = 'orange';
+      ctx.fillStyle = 'blue';
       ctx.fillRect(food.x, food.y, box, box);
 
       ctx.fillStyle = 'black';
@@ -93,6 +92,8 @@
         dy = 0;
       } else if (keyPressed === 'ArrowRight' && dx !== -box) {
         dx = box;
+        dy = 0;
+      }
     });
   </script>
 </body>
