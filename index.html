@@ -93,6 +93,17 @@
         dy = 0;
       } else if (keyPressed === 'ArrowRight' && dx !== -box) {
         dx = box;
+        dy = 0;   if (keyPressed === 'KeyW' && dy !== box) {
+        dx = 0;
+        dy = -box;
+      } else if (keyPressed === 'KeyA' && dy !== -box) {
+        dx = 0;
+        dy = box;
+      } else if (keyPressed === 'KeyS' && dx !== box) {
+        dx = -box;
+        dy = 0;
+      } else if (keyPressed === 'KeyD' && dx !== -box) {
+        dx = box;
         dy = 0;
       }
     });
