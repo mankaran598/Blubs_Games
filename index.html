@@ -78,23 +78,23 @@
     randomFood();
     const gameLoop = setInterval(update, 100);
 
-    document.addEventListener('keydown', (event) => {
-      const keyPressed = event.key;
+  document.addEventListener('keydown', (event) => {
+  const keyPressed = event.key;
 
-      if (keyPressed === 'ArrowUp' && dy !== box) {
-        dx = 0;
-        dy = -box;
-      } else if (keyPressed === 'ArrowDown' && dy !== -box) {
-        dx = 0;
-        dy = box;
-      } else if (keyPressed === 'ArrowLeft' && dx !== box) {
-        dx = -box;
-        dy = 0;
-      } else if (keyPressed === 'ArrowRight' && dx !== -box) {
-        dx = box;
-        dy = 0;
-      }
-    });
+  if (keyPressed === 'ArrowUp' && dy !== box && dy !== 0) {
+    dx = 0;
+    dy = -box;
+  } else if (keyPressed === 'ArrowDown' && dy !== -box && dy !== 0) {
+    dx = 0;
+    dy = box;
+  } else if (keyPressed === 'ArrowLeft' && dx !== box && dx !== 0) {
+    dx = -box;
+    dy = 0;
+  } else if (keyPressed === 'ArrowRight' && dx !== -box && dx !== 0) {
+    dx = box;
+    dy = 0;
+  }
+});
   </script>
 </body>
   <button onclick="location.reload();">Restart The Game</button>
