@@ -31,17 +31,17 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'green';
+      ctx.fillStyle = 'black';
       snake.forEach((segment) => {
         ctx.fillRect(segment.x, segment.y, box, box);
       });
 
-      ctx.fillStyle = 'blue';
+      ctx.fillStyle = 'red';
       ctx.fillRect(food.x, food.y, box, box);
 
       ctx.fillStyle = 'black';
       ctx.font = '20px Arial';
-      ctx.fillText('Score: ' + score, 10, 30);
+      ctx.fillText('Score: ' + Score, 10, 30);
     }
 
     function moveSnake() {
@@ -99,6 +99,6 @@ document.addEventListener('keydown', (event) => {
 </body>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <button onclick="window.location.href='https://forms.gle/47VJkFFdrYEVvu9Y9'">Any bugs? Report them here</button>
-<p>The green pixel is the snake & the blue pixel is the food. The border is from the top of the screen to the half way of the button.</p>
+<p><h3>The black pixel is the snake & the red pixel is the food. The border is from the top of the screen to the button.</h3></p>
 </html>
 </html>
