@@ -78,25 +78,27 @@
     randomFood();
     const gameLoop = setInterval(update, 100);
 
-    document.addEventListener('keydown', (event) => {
-      const keyPressed = event.key;
+document.addEventListener('keydown', (event) => {
+  const keyPressed = event.key;
 
-      if (keyPressed === 'ArrowUp' && dy !== box) {
-        dx = 0;
-        dy = -box;
-      } else if (keyPressed === 'ArrowDown' && dy !== -box) {
-        dx = 0;
-        dy = box;
-      } else if (keyPressed === 'ArrowLeft' && dx !== box) {
-        dx = -box;
-        dy = 0;
-      } else if (keyPressed === 'ArrowRight' && dx !== -box) {
-        dx = box;
-        dy = 0;
-      }
-    });
+  if (keyPressed === 'ArrowUp' && dy !== box && dy !== 0) {
+    dx = 0;
+    dy = -box;
+  } else if (keyPressed === 'ArrowDown' && dy !== -box && dy !== 0) {
+    dx = 0;
+    dy = box;
+  } else if (keyPressed === 'ArrowLeft' && dx !== box && dx !== 0) {
+    dx = -box;
+    dy = 0;
+  } else if (keyPressed === 'ArrowRight' && dx !== -box && dx !== 0) {
+    dx = box;
+    dy = 0;
+  }
+});
   </script>
 </body>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
+  <button onclick="window.location.href='https://forms.gle/47VJkFFdrYEVvu9Y9'">Any bugs? Report them here</button>
+<p>The green pixel is the snake & the blue pixel is the food. The border is from the top of the screen to the half way of the button.</p>
 </html>
 </html>
