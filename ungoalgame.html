@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .word {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .input-container input {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            margin: 0 1rem;
+            border: 1px solid #000;
+            border-radius: 4px;
+        }
+        .result {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Spelling Game</h1>
+    <div class="word"></div>
+    <div class="input-container">
+        <input id="input" type="text" />
+        <button id="submit">Submit</button>
+    </div>
+    <div class="result"></div>
+
+    <script>
+        const wordElement = document.querySelector('.word');
+        const inputElement = document.querySelector('#input');
+        const submitButton = document.querySelector('#submit');
+        const resultElement = document.querySelector('.result');
+
+        const words = ['example', 'educational', 'game', 'mechanics'];
+        let currentWordIndex = 0;
+
+        function showWord() {
+            wordElement.textContent = words[currentWordIndex];
+        }
+
+        function checkSpelling() {
+            if (inputElement.value.toLowerCase() === words[currentWordIndex]) {
+                resultElement.textContent = 'Correct!';
+            } else {
+                resultElement.textContent = 'Incorrect. Try again.';
+            }
+            inputElement.value = '';
+        }
+
+        function nextWord() {
+            currentWordIndex = (currentWordIndex + 1) % words.length;
+            showWord();
+        }
+
+        submitButton.addEventListener('click', checkSpelling);
+        inputElement.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                checkSpelling();
+            }
+        });
+
+        showWord();
+    </script>
+</body>
+</html>
