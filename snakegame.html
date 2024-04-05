@@ -36,7 +36,12 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = 'black';
-      snake.forEach((segment) => {
+      snake.forEach((segment, index) => {
+        if (index === 0) {
+          ctx.fillStyle = 'blue'; // Change color of the snake's head
+        } else {
+          ctx.fillStyle = 'black'; // Reset color for the rest of the segments
+        }
         ctx.fillRect(segment.x, segment.y, box, box);
       });
 
@@ -97,7 +102,7 @@
       } else if (keyPressed === 'ArrowRight' && dx !== -box) {
         dx = box;
         dy = 0;
-      }     if ((keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
+      } else if ((keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
         dx = 0;
         dy = -box;
       } else if ((keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
@@ -115,6 +120,6 @@
   </script>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
-  <p><h2>The black pixel is the snake & the red pixel is the food.</h2></p>
+  <p><h2>The blue pixel is the head of the snake & the red pixel is the food.</h2></p>
 </body>
 </html>
