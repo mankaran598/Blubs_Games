@@ -4,107 +4,117 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Snake Game</title>
-   <style>
-        body {
-            background-color: grey; /* Grey color code */
-            /* You can adjust the shade of grey by changing the hex color code */
-        }
-        .container {
-            border: 5px solid black; /* Add a black border */
-            padding: 20px; /* Add padding to create space between content and border */
-        }
-    </style>
+  <style>
+    body {
+      background-color: grey; /* Grey color code */
+      /* You can adjust the shade of grey by changing the hex color code */
+    }
+
+    #gameCanvas {
+      border: 5px solid black; /* Add a black border around the canvas */
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <canvas id="gameCanvas" width="1400" height="800"></canvas>
-    <script>
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
+  <canvas id="gameCanvas" width="1400" height="800"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
 
-      const box = 20;
-      let snake = [{x: 200, y: 200}];
-      let food = {x: 0, y: 0};
-      let score = 0;
-      let dx = 0;
-      let dy = 0;
+    const box = 20;
+    let snake = [{x: 200, y: 200}];
+    let food = {x: 0, y: 0};
+    let score = 0;
+    let dx = 0;
+    let dy = 0;
 
-      function randomFood() {
-        food.x = Math.floor(Math.random() * (canvas.width / box)) * box;
-        food.y = Math.floor(Math.random() * (canvas.height / box)) * box;
-      }
+    function randomFood() {
+      food.x = Math.floor(Math.random() * (canvas.width / box)) * box;
+      food.y = Math.floor(Math.random() * (canvas.height / box)) * box;
+    }
 
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'black';
-        snake.forEach((segment) => {
-          ctx.fillRect(segment.x, segment.y, box, box);
-        });
-
-        ctx.fillStyle = 'red';
-        ctx.fillRect(food.x, food.y, box, box);
-
-        ctx.fillStyle = 'black';
-        ctx.font = '20px Arial';
-        ctx.fillText('Score: ' + score, 10, 30);
-      }
-
-      function moveSnake() {
-        const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-        snake.unshift(head);
-
-        if (head.x === food.x && head.y === food.y) {
-          score++;
-          randomFood();
-        } else {
-          snake.pop();
-        }
-      }
-
-      function checkCollision() {
-        if (
-          snake[0].x < 0 ||
-          snake[0].x >= canvas.width ||
-          snake[0].y < 0 ||
-          snake[0].y >= canvas.height ||
-          snake.slice(1).some((segment) => segment.x === snake[0].x && segment.y === snake[0].y)
-        ) {
-          clearInterval(gameLoop);
-          alert('Game Over! Your score is ' + score);
-        }
-      }
-
-      function update() {
-        moveSnake();
-        checkCollision();
-        draw();
-      }
-
-      randomFood();
-      const gameLoop = setInterval(update, 100);
-
-      document.addEventListener('keydown', (event) => {
-        const keyPressed = event.key;
-
-        if (keyPressed === 'ArrowUp' && dy !== box) {
-          dx = 0;
-          dy = -box;
-        } else if (keyPressed === 'ArrowDown' && dy !== -box) {
-          dx = 0;
-          dy = box;
-        } else if (keyPressed === 'ArrowLeft' && dx !== box) {
-          dx = -box;
-          dy = 0;
-        } else if (keyPressed === 'ArrowRight' && dx !== -box) {
-          dx = box;
-          dy = 0;
-        }
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black';
+      snake.forEach((segment) => {
+        ctx.fillRect(segment.x, segment.y, box, box);
       });
 
-    </script>
-    <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
-    <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
-    <p><h2>The black pixel is the snake & the red pixel is the food. The border is from the top of the screen to the button.</h2></p>
-  </div>
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x, food.y, box, box);
+
+      ctx.fillStyle = 'black';
+      ctx.font = '20px Arial';
+      ctx.fillText('Score: ' + score, 10, 30);
+    }
+
+    function moveSnake() {
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        randomFood();
+      } else {
+        snake.pop();
+      }
+    }
+
+    function checkCollision() {
+      if (
+        snake[0].x < 0 ||
+        snake[0].x >= canvas.width ||
+        snake[0].y < 0 ||
+        snake[0].y >= canvas.height ||
+        snake.slice(1).some((segment) => segment.x === snake[0].x && segment.y === snake[0].y)
+      ) {
+        clearInterval(gameLoop);
+        alert('Game Over! Your score is ' + score);
+      }
+    }
+
+    function update() {
+      moveSnake();
+      checkCollision();
+      draw();
+    }
+
+    randomFood();
+    const gameLoop = setInterval(update, 100);
+
+    document.addEventListener('keydown', (event) => {
+      const keyPressed = event.key;
+
+      if (keyPressed === 'ArrowUp' && dy !== box) {
+        dx = 0;
+        dy = -box;
+      } else if (keyPressed === 'ArrowDown' && dy !== -box) {
+        dx = 0;
+        dy = box;
+      } else if (keyPressed === 'ArrowLeft' && dx !== box) {
+        dx = -box;
+        dy = 0;
+      } else if (keyPressed === 'ArrowRight' && dx !== -box) {
+        dx = box;
+        dy = 0;
+      }     if ((keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
+        dx = 0;
+        dy = -box;
+      } else if ((keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
+        dx = 0;
+        dy = box;
+      } else if ((keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
+        dx = -box;
+        dy = 0;
+      } else if ((keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
+        dx = box;
+        dy = 0;
+      }
+    });
+
+  </script>
+  <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
+  <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
+  <p><h2>The black pixel is the snake & the red pixel is the food.</h2></p>
 </body>
 </html>
