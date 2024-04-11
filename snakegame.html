@@ -93,25 +93,39 @@
     }
 
     randomFood();
-    const gameLoop = setInterval(update, 60); // Increased the speed to update every 50 milliseconds
+    const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
 
-    document.addEventListener('keydown', (event) => {
-      const keyPressed = event.key;
+ 
+document.addEventListener('keydown', (event) => {
+  const keyPressed = event.key;
 
-      if ((keyPressed === 'ArrowUp' || keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
-        dx = 0;
-        dy = -box;
-      } else if ((keyPressed === 'ArrowDown' || keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
-        dx = 0;
-        dy = box;
-      } else if ((keyPressed === 'ArrowLeft' || keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
-        dx = -box;
-        dy = 0;
-      } else if ((keyPressed === 'ArrowRight' || keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
-        dx = box;
-        dy = 0;
-      }
-    });
+  // Check if the cheat code is entered
+  if (keyPressed === '1' && !cheatActivated) {
+    cheatActivated = true; // Activate the cheat
+  } else if (keyPressed === '2' && cheatActivated) {
+    cheatActivated = false; // Deactivate the cheat
+    score += 1000; // Add 1000 points to the score
+    // Increase the size of the snake accordingly
+    for (let i = 0; i < 1000 / box; i++) {
+      snake.push({x: snake[snake.length - 1].x, y: snake[snake.length - 1].y});
+    }
+  }
+
+  // Rest of the key event handling code remains the same
+  if ((keyPressed === 'ArrowUp' || keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
+    dx = 0;
+    dy = -box;
+  } else if ((keyPressed === 'ArrowDown' || keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
+    dx = 0;
+    dy = box;
+  } else if ((keyPressed === 'ArrowLeft' || keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
+    dx = -box;
+    dy = 0;
+  } else if ((keyPressed === 'ArrowRight' || keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
+    dx = box;
+    dy = 0;
+  }
+});
 
   </script>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
