@@ -1,71 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shooting Game</title>
-<style>
-    canvas {
-        border: 2px solid black;
-        display: block;
-        margin: 0 auto;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Shooting Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
-<canvas id="gameCanvas" width="800" height="600"></canvas>
-<script>
-    // Initialize canvas and context
-    var canvas = document.getElementById("gameCanvas");
-    var ctx = canvas.getContext("2d");
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Set up Three.js scene
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-    // Player object
-    var player = {
-        x: canvas.width / 2,
-        y: canvas.height - 30,
-        width: 30,
-        height: 30,
-        speed: 5
-    };
+        // Set up player
+        var geometry = new THREE.BoxGeometry();
+        var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        var player = new THREE.Mesh(geometry, material);
+        scene.add(player);
+        camera.position.z = 5;
 
-    // Key press event listeners
-    var keys = {};
-    document.addEventListener("keydown", function (e) {
-        keys[e.key] = true;
-    });
-    document.addEventListener("keyup", function (e) {
-        keys[e.key] = false;
-    });
+        // Key press event listeners
+        var keys = {};
+        document.addEventListener("keydown", function (e) {
+            keys[e.key] = true;
+        });
+        document.addEventListener("keyup", function (e) {
+            keys[e.key] = false;
+        });
 
-    // Main game loop
-    function draw() {
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Main game loop
+        function animate() {
+            requestAnimationFrame(animate);
 
-        // Draw player
-        ctx.fillStyle = "blue";
-        ctx.fillRect(player.x, player.y, player.width, player.height);
+            // Move player
+            if (keys["ArrowUp"] || keys["w"]) {
+                player.position.y += 0.1;
+            }
+            if (keys["ArrowDown"] || keys["s"]) {
+                player.position.y -= 0.1;
+            }
+            if (keys["ArrowLeft"] || keys["a"]) {
+                player.position.x -= 0.1;
+            }
+            if (keys["ArrowRight"] || keys["d"]) {
+                player.position.x += 0.1;
+            }
 
-        // Move player
-        if ((keys["ArrowUp"] || keys["w"]) && player.y > 0) {
-            player.y -= player.speed;
+            renderer.render(scene, camera);
         }
-        if ((keys["ArrowDown"] || keys["s"]) && player.y < canvas.height - player.height) {
-            player.y += player.speed;
-        }
-        if ((keys["ArrowLeft"] || keys["a"]) && player.x > 0) {
-            player.x -= player.speed;
-        }
-        if ((keys["ArrowRight"] || keys["d"]) && player.x < canvas.width - player.width) {
-            player.x += player.speed;
-        }
 
-        // Request next frame
-        requestAnimationFrame(draw);
-    }
-
-    // Start game loop
-    draw();
-</script>
+        // Start game loop
+        animate();
+    </script>
 </body>
 </html>
