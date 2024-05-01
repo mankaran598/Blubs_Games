@@ -37,7 +37,7 @@
         player.add(gun);
 
         // Set up playing field border
-        var fieldBorderGeometry = new THREE.BoxGeometry(5, 5, 0.1);
+        var fieldBorderGeometry = new THREE.BoxGeometry(8, 8, 0.1);
         var fieldBorderMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
         var fieldBorder = new THREE.Mesh(fieldBorderGeometry, fieldBorderMaterial);
         scene.add(fieldBorder);
@@ -53,6 +53,9 @@
         document.addEventListener("keyup", function (e) {
             keys[e.key] = false;
         });
+
+        // Mouse click event listener
+        document.addEventListener("click", shoot);
 
         // Main game loop
         function animate() {
@@ -73,9 +76,7 @@
             }
 
             // Shoot
-            if (keys[" "]) { // Space key
-                shoot();
-            }
+            // This part is handled by the mouse click event now
 
             // Spawn bots every 0.1 seconds
             if (Math.random() < 0.01) {
@@ -103,8 +104,8 @@
             var carGeometry = new THREE.BoxGeometry(0.8, 0.4, 0.2);
             var carMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
             var bot = new THREE.Mesh(carGeometry, carMaterial);
-            bot.position.x = (Math.random() - 0.5) * 4; // Randomize within border
-            bot.position.y = (Math.random() - 0.5) * 4; // Randomize within border
+            bot.position.x = (Math.random() - 0.5) * 7; // Randomize within border
+            bot.position.y = (Math.random() - 0.5) * 7; // Randomize within border
             scene.add(bot);
             bots.push(bot);
         }
