@@ -71,6 +71,11 @@
                 shoot();
             }
 
+            // Spawn bots every 0.1 seconds
+            if (Math.random() < 0.01) {
+                spawnBot();
+            }
+
             // Move bots
             for (var i = 0; i < bots.length; i++) {
                 bots[i].position.z += 0.05; // Move bots towards the player
@@ -110,3 +115,4 @@
     </script>
 </body>
 </html>
+
