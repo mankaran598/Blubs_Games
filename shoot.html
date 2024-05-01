@@ -89,7 +89,9 @@
 
         // Function to spawn a bot
         function spawnBot() {
-            var bot = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+            var carGeometry = new THREE.BoxGeometry(0.8, 0.4, 0.2);
+            var carMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            var bot = new THREE.Mesh(carGeometry, carMaterial);
             bot.position.x = (Math.random() - 0.5) * 10;
             bot.position.y = (Math.random() - 0.5) * 10;
             scene.add(bot);
