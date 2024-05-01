@@ -8,6 +8,7 @@
         body {
             margin: 0;
             overflow: hidden;
+            background-color: #444;
         }
     </style>
 </head>
@@ -16,7 +17,7 @@
     <script>
         // Set up Three.js scene
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
@@ -27,6 +28,16 @@
         var player = new THREE.Mesh(geometry, material);
         scene.add(player);
         camera.position.z = 5;
+
+        // Set up gun
+        var gunGeometry = new THREE.BoxGeometry(0.2, 0.2, 1);
+        var gunMaterial = new THREE.MeshBasicMaterial({ color: 0xaaaaaa });
+        var gun = new THREE.Mesh(gunGeometry, gunMaterial);
+        gun.position.z = -1;
+        player.add(gun);
+
+        // Set up bots
+        var bots = [];
 
         // Key press event listeners
         var keys = {};
@@ -55,11 +66,45 @@
                 player.position.x += 0.1;
             }
 
+            // Shoot
+            if (keys[" "]) { // Space key
+                shoot();
+            }
+
+            // Move bots
+            for (var i = 0; i < bots.length; i++) {
+                bots[i].position.z += 0.05; // Move bots towards the player
+                if (bots[i].position.distanceTo(player.position) < 0.5) { // Check collision with player
+                    scene.remove(bots[i]); // Remove bot
+                    bots.splice(i, 1);
+                    // Handle collision action (e.g., decrease player health)
+                }
+            }
+
             renderer.render(scene, camera);
         }
 
         // Start game loop
         animate();
+
+        // Function to spawn a bot
+        function spawnBot() {
+            var bot = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+            bot.position.x = (Math.random() - 0.5) * 10;
+            bot.position.y = (Math.random() - 0.5) * 10;
+            scene.add(bot);
+            bots.push(bot);
+        }
+
+        // Function to shoot
+        function shoot() {
+            var projectileGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            var projectileMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            var projectile = new THREE.Mesh(projectileGeometry, projectileMaterial);
+            projectile.position.copy(gun.getWorldPosition(new THREE.Vector3()));
+            projectile.velocity = new THREE.Vector3(0, 0, -0.1).applyQuaternion(gun.getWorldQuaternion(new THREE.Quaternion()));
+            scene.add(projectile);
+        }
     </script>
 </body>
 </html>
