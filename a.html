@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odd or Even Number Checker</title>
+</head>
+<body>
+    <form oninput="result.value = parseInt(number.value) % 2 ? 'Odd' : 'Even'">
+        <label for="number">Enter a number:</label>
+        <input type="number" id="number" name="number">
+        <output name="result" for="number"></output>
+    </form>
+</body>
+</html>
