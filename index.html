@@ -13,6 +13,30 @@
     #gameCanvas {
       border: 5px solid black; /* Add a black border around the canvas */
     }
+
+    .leaderboard {
+      margin-top: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .leaderboard th, .leaderboard td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .leaderboard th {
+      background-color: #f2f2f2;
+    }
+
+    .leaderboard tr:hover {
+      background-color: #f5f5f5;
+    }
   </style>
 </head>
 <body>
@@ -21,6 +45,25 @@
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
   <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food.</h2></p>
   <a href="firstver.html"><button>Click here to play the first version of the game</button></a>  
+
+  <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Leaderboard rows will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <input type="text" id="usernameInput" placeholder="Enter your username">
+  <button onclick="submitScore()">Submit Score</button>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -100,37 +143,41 @@
     randomFood();
     const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
 
- 
-document.addEventListener('keydown', (event) => {
-  const keyPressed = event.key;
+    document.addEventListener('keydown', (event) => {
+      const keyPressed = event.key;
 
-  // Check if the cheat code is entered
-  if (keyPressed === '1' && !cheatActivated) {
-    cheatActivated = true; // Activate the cheat
-  } else if (keyPressed === '2' && cheatActivated) {
-    cheatActivated = false; // Deactivate the cheat
-    score += 1000; // Add 1000 points to the score
-    // Increase the size of the snake accordingly
-    for (let i = 0; i < 1000 / box; i++) {
-      snake.push({x: snake[snake.length - 1].x, y: snake[snake.length - 1].y});
+      if ((keyPressed === 'ArrowUp' || keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
+        dx = 0;
+        dy = -box;
+      } else if ((keyPressed === 'ArrowDown' || keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
+        dx = 0;
+        dy = box;
+      } else if ((keyPressed === 'ArrowLeft' || keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
+        dx = -box;
+        dy = 0;
+      } else if ((keyPressed === 'ArrowRight' || keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
+        dx = box;
+        dy = 0;
+      }
+    });
+
+    function submitScore() {
+      const username = document.getElementById('usernameInput').value;
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td></td>
+        <td>${username}</td>
+        <td>${score}</td>
+      `;
+      leaderboardBody.appendChild(newRow);
+
+      // Update ranks
+      const rows = leaderboardBody.getElementsByTagName('tr');
+      for (let i = 0; i < rows.length; i++) {
+        rows[i].getElementsByTagName('td')[0].innerText = i + 1;
+      }
     }
-  }
-
-  // Rest of the key event handling code remains the same
-  if ((keyPressed === 'ArrowUp' || keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
-    dx = 0;
-    dy = -box;
-  } else if ((keyPressed === 'ArrowDown' || keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
-    dx = 0;
-    dy = box;
-  } else if ((keyPressed === 'ArrowLeft' || keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
-    dx = -box;
-    dy = 0;
-  } else if ((keyPressed === 'ArrowRight' || keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
-    dx = box;
-    dy = 0;
-  }
-});
   </script>
 </body>
 </html>
