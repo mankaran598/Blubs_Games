@@ -20,7 +20,32 @@
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
   <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food.</h2></p>
-  <a href="firstver.html"><button>Click here to play the first version of the game</button></a>  
+  <a href="firstver.html"><button>Click here to play the first version of the game</button></a>
+
+  <!-- Leaderboard HTML -->
+  <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Leaderboard rows will be dynamically added here -->
+        <!-- Placeholder message -->
+        <tr>
+          <td colspan="3">Loading leaderboard...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Input box for username -->
+  <input type="text" id="usernameInput" placeholder="Enter your username">
+  <!-- Button to submit score -->
+  <button onclick="submitScore()">Submit Score</button>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -32,6 +57,11 @@
     let score = 0;
     let dx = 0;
     let dy = 0;
+
+    // Initialize leaderboard on page load
+    window.onload = function() {
+      displayScores();
+    }
 
     function randomFood() {
       food.x = Math.floor(Math.random() * (canvas.width / box)) * box;
@@ -88,6 +118,10 @@
       ) {
         clearInterval(gameLoop);
         alert('Game Over! Your score is ' + score);
+        // Save score to local storage
+        localStorage.setItem('currentScore', score);
+        // Update leaderboard display
+        displayScores();
       }
     }
 
@@ -97,40 +131,56 @@
       draw();
     }
 
+    // Retrieve scores from local storage
+    function displayScores() {
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      leaderboardBody.innerHTML = ''; // Clear previous entries
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      // Sort scores in descending order
+      scores.sort((a, b) => b.score - a.score);
+      // Add scores to the leaderboard table
+      scores.forEach((entry, index) => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${entry.username}</td>
+          <td>${entry.score}</td>
+        `;
+        leaderboardBody.appendChild(newRow);
+      });
+    }
+
+    function submitScore() {
+      const username = document.getElementById('usernameInput').value;
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      // Add new score to the scores array
+      scores.push({ username: username, score: parseInt(score) });
+      // Update local storage with the new scores
+      localStorage.setItem('snakeScores', JSON.stringify(scores));
+      // Update leaderboard display
+      displayScores();
+    }
+
     randomFood();
     const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
 
- 
-document.addEventListener('keydown', (event) => {
-  const keyPressed = event.key;
-
-  // Check if the cheat code is entered
-  if (keyPressed === '1' && !cheatActivated) {
-    cheatActivated = true; // Activate the cheat
-  } else if (keyPressed === '2' && cheatActivated) {
-    cheatActivated = false; // Deactivate the cheat
-    score += 1000; // Add 1000 points to the score
-    // Increase the size of the snake accordingly
-    for (let i = 0; i < 1000 / box; i++) {
-      snake.push({x: snake[snake.length - 1].x, y: snake[snake.length - 1].y});
-    }
-  }
-
-  // Rest of the key event handling code remains the same
-  if ((keyPressed === 'ArrowUp' || keyPressed === 'w' || keyPressed === 'W') && dy !== box) {
-    dx = 0;
-    dy = -box;
-  } else if ((keyPressed === 'ArrowDown' || keyPressed === 's' || keyPressed === 'S') && dy !== -box) {
-    dx = 0;
-    dy = box;
-  } else if ((keyPressed === 'ArrowLeft' || keyPressed === 'a' || keyPressed === 'A') && dx !== box) {
-    dx = -box;
-    dy = 0;
-  } else if ((keyPressed === 'ArrowRight' || keyPressed === 'd' || keyPressed === 'D') && dx !== -box) {
-    dx = box;
-    dy = 0;
-  }
-});
+    // Keyboard event listener
+    document.addEventListener('keydown', function(event) {
+      // Arrow keys
+      if (event.keyCode === 37 && dx !== box) { // Left arrow key
+        dx = -box;
+        dy = 0;
+      } else if (event.keyCode === 39 && dx !== -box) { // Right arrow key
+        dx = box;
+        dy = 0;
+      } else if (event.keyCode === 38 && dy !== box) { // Up arrow key
+        dx = 0;
+        dy = -box;
+      } else if (event.keyCode === 40 && dy !== -box) { // Down arrow key
+        dx = 0;
+        dy = box;
+      }
+    });
   </script>
 </body>
 </html>
