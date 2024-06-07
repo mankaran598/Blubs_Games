@@ -164,7 +164,23 @@
     randomFood();
     const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
 
-    // Key event handling code remains the same...
+    // Keyboard event listener
+    document.addEventListener('keydown', function(event) {
+      // Arrow keys
+      if (event.keyCode === 37 && dx !== box) { // Left arrow key
+        dx = -box;
+        dy = 0;
+      } else if (event.keyCode === 39 && dx !== -box) { // Right arrow key
+        dx = box;
+        dy = 0;
+      } else if (event.keyCode === 38 && dy !== box) { // Up arrow key
+        dx = 0;
+        dy = -box;
+      } else if (event.keyCode === 40 && dy !== -box) { // Down arrow key
+        dx = 0;
+        dy = box;
+      }
+    });
   </script>
 </body>
 </html>
