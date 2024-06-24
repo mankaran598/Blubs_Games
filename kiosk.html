@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: #f0f0f0; /* Light grey background */
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px; /* To center align vertically */
+        }
+        h1 {
+            font-size: 2em; /* Adjust font size */
+        }
+        form {
+            margin-top: 20px;
+        }
+        #unlockMessage {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login Page</h1>
+    <form id="loginForm" method="post" action="#">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <button type="submit">Login</button>
+    </form>
+
+    <div id="unlockMessage">
+        <p>Computer unlocked. Welcome to the kiosk account!</p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            var password = document.getElementById('password').value;
+            if (password === 'Burtle@123') {
+                document.getElementById('loginForm').style.display = 'none'; // Hide the login form
+                document.getElementById('unlockMessage').style.display = 'block'; // Show the unlock message
+            } else {
+                alert('Incorrect password. Please try again.');
+                document.getElementById('password').value = ''; // Clear the password field
+            }
+        });
+    </script>
+</body>
+</html>
