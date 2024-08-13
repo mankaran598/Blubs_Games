@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Solver Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+        }
+
+        #chatbox {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #userInput {
+            width: calc(100% - 60px);
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chatbox"></div>
+        <input type="text" id="userInput" placeholder="Type a math problem...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+        function solveMath(expression) {
+            try {
+                return eval(expression);
+            } catch {
+                return "I can't solve that.";
+            }
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            const chatbox = document.getElementById("chatbox");
+
+            const userMessage = document.createElement("div");
+            userMessage.textContent = "You: " + userInput;
+            chatbox.appendChild(userMessage);
+
+            const botMessage = document.createElement("div");
+            botMessage.textContent = "Bot: " + solveMath(userInput);
+            chatbox.appendChild(botMessage);
+
+            document.getElementById("userInput").value = "";
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
