@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yu-Gi-Oh Dueling Interface</title>
+    <style>
+        body {
+            background-color: darkblue;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .field {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .player-field, .ai-field {
+            width: 45%;
+        }
+
+        .monster-zone, .spell-trap-zone {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .monster-slot, .spell-slot {
+            width: 18%;
+            height: 100px;
+            border: 1px solid white;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Yu-Gi-Oh: Yusei Fudo vs. Jack Atlas</h1>
+        <div class="field">
+            <div class="player-field">
+                <h2>Yusei Fudo's Field</h2>
+                <div class="monster-zone" id="yusei-monster-zone">
+                    <div class="monster-slot" id="yusei-monster-1"></div>
+                    <div class="monster-slot" id="yusei-monster-2"></div>
+                    <div class="monster-slot" id="yusei-monster-3"></div>
+                    <div class="monster-slot" id="yusei-monster-4"></div>
+                    <div class="monster-slot" id="yusei-monster-5"></div>
+                </div>
+                <div class="spell-trap-zone" id="yusei-spell-zone">
+                    <div class="spell-slot" id="yusei-spell-1"></div>
+                    <div class="spell-slot" id="yusei-spell-2"></div>
+                    <div class="spell-slot" id="yusei-spell-3"></div>
+                    <div class="spell-slot" id="yusei-spell-4"></div>
+                    <div class="spell-slot" id="yusei-spell-5"></div>
+                </div>
+            </div>
+            <div class="ai-field">
+                <h2>Jack Atlas's Field</h2>
+                <div class="monster-zone" id="jack-monster-zone">
+                    <div class="monster-slot" id="jack-monster-1"></div>
+                    <div class="monster-slot" id="jack-monster-2"></div>
+                    <div class="monster-slot" id="jack-monster-3"></div>
+                    <div class="monster-slot" id="jack-monster-4"></div>
+                    <div class="monster-slot" id="jack-monster-5"></div>
+                </div>
+                <div class="spell-trap-zone" id="jack-spell-zone">
+                    <div class="spell-slot" id="jack-spell-1"></div>
+                    <div class="spell-slot" id="jack-spell-2"></div>
+                    <div class="spell-slot" id="jack-spell-3"></div>
+                    <div class="spell-slot" id="jack-spell-4"></div>
+                    <div class="spell-slot" id="jack-spell-5"></div>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="draw-button">Draw Card</button>
+            <button id="end-turn-button">End Turn</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('draw-button').addEventListener('click', function() {
+            // Add logic to handle drawing a card for Yusei Fudo
+            alert("Draw a card for Yusei Fudo!");
+        });
+
+        document.getElementById('end-turn-button').addEventListener('click', function() {
+            // Add logic to handle ending the turn
+            alert("End Yusei Fudo's turn!");
+        });
+    </script>
+</body>
+</html>
