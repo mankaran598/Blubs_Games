@@ -7,10 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #007BFF; /* Changed to blue */
+            background-color: #007BFF; /* Blue background */
             margin: 0;
             padding: 20px;
-            color: white; /* Change text color to white for better contrast */
+            color: white; /* White text color */
         }
 
         header {
@@ -30,14 +30,18 @@
         section {
             width: 45%;
             padding: 10px;
-            background: white; /* Keeping section backgrounds white for contrast */
+            background: white; /* White background for sections */
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            color: black; /* Change text color to black for better readability */
+            color: black; /* Black text color for readability */
         }
 
         button {
             margin-top: 10px;
+        }
+
+        #card-image {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -54,7 +58,9 @@
             <h2>Select Your Cards</h2>
             <input type="text" id="search" placeholder="Search for cards...">
             <div id="card-list"></div>
+            <button id="show-deck">Show Your Deck</button>
             <button id="save-deck">Save Your Deck</button>
+            <div id="card-image"></div>
         </section>
     </main>
     <script>
@@ -98,6 +104,16 @@
             });
         }
 
+        // Show user's deck
+        document.getElementById('show-deck').addEventListener('click', () => {
+            const savedDeck = JSON.parse(localStorage.getItem('userDeck'));
+            if (savedDeck) {
+                alert('Your Deck: ' + savedDeck.join(', '));
+            } else {
+                alert('Your deck is empty!');
+            }
+        });
+
         // Save selected cards to local storage
         document.getElementById('save-deck').addEventListener('click', () => {
             const selectedCards = Array.from(document.querySelectorAll('#card-list input:checked'))
@@ -118,6 +134,29 @@
                 });
             }
         }
+
+        // Display card image based on search input
+        document.getElementById('search').addEventListener('input', async (event) => {
+            const query = event.target.value;
+            if (query) {
+                const response = await fetch('https://ygoprodeck.com/api/v7/cardinfo.php');
+                const data = await response.json();
+                const card = data.data.find(card => card.name.toLowerCase() === query.toLowerCase());
+                const cardImageDiv = document.getElementById('card-image');
+                cardImageDiv.innerHTML = ''; // Clear previous image
+                if (card) {
+                    const img = document.createElement('img');
+                    img.src = card.card_images[0].image_url; // Use the first image of the card
+                    img.alt = card.name;
+                    img.style.width = '200px'; // Set width for the image
+                    cardImageDiv.appendChild(img);
+                } else {
+                    cardImageDiv.innerHTML = '<p>No card found.</p>';
+                }
+            } else {
+                document.getElementById('card-image').innerHTML = ''; // Clear image if search is empty
+            }
+        });
 
         // Initialize the app
         fetchCards();
