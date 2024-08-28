@@ -193,6 +193,7 @@
                 const cardImageDiv = document.getElementById('card-image');
                 cardImageDiv.innerHTML = ''; // Clear previous image
                 if (card) {
+                    console.log(card.card_images); // Log the card images to check if they are being fetched
                     const img = document.createElement('img');
                     img.src = card.card_images[0].image_url; // Use the first image of the card
                     img.alt = card.name;
