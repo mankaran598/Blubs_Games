@@ -36,12 +36,49 @@
             color: black; /* Black text color for readability */
         }
 
+        #card-dropping-area {
+            width: 300px;
+            height: 150px;
+            border: 2px dashed #ccc;
+            margin-top: 10px;
+            position: relative;
+            background-color: #f0f0f0;
+            text-align: center;
+            line-height: 150px; /* Center the text vertically */
+        }
+
+        .draggable {
+            cursor: move;
+            border: 1px solid #007BFF;
+            padding: 5px;
+            margin: 5px;
+            display: inline-block;
+            background: white;
+            color: black;
+            border-radius: 3px;
+        }
+
         button {
             margin-top: 10px;
         }
 
         #card-image {
             margin-top: 20px;
+        }
+
+        .chosen-card {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #007BFF;
+            background: white;
+            color: black;
+            border-radius: 3px;
+        }
+
+        .chosen-card:hover {
+            cursor: pointer;
+            background-color: #e0e0e0;
         }
     </style>
 </head>
@@ -57,14 +94,22 @@
         <section id="card-selection">
             <h2>Select Your Cards</h2>
             <input type="text" id="search" placeholder="Search for cards...">
+            <button id="search-card">Search Card</button>
             <div id="card-list"></div>
+            <div id="card-image"></div>
             <button id="show-deck">Show Your Deck</button>
             <button id="save-deck">Save Your Deck</button>
-            <div id="card-image"></div>
+            <button id="delete-card">Delete Selected Card</button>
+            <h3>Your Choosing Deck</h3>
+            <div id="card-dropping-area" ondrop="drop(event)" ondragover="allowDrop(event)">
+                Drop Cards Here!
+            </div>
+            <div id="choosing-deck"></div>
+            <button id="add-to-deck">Add to Deck</button>
         </section>
     </main>
     <script>
-        // Sample data for Yusei Fudo's Deck (you can modify this)
+        // Sample data for Yusei Fudo's Deck
         const yuseiFudoDeck = [
             "Stardust Dragon",
             "Junk Warrior",
@@ -82,7 +127,7 @@
             });
         }
 
-        // Load cards from the database (You should fetch this from a proper API)
+        // Load cards from the database
         async function fetchCards() {
             const response = await fetch('https://ygoprodeck.com/api/v7/cardinfo.php');
             const data = await response.json();
@@ -96,6 +141,9 @@
 
             cards.forEach(card => {
                 const cardDiv = document.createElement('div');
+                cardDiv.classList.add('draggable');
+                cardDiv.setAttribute('draggable', 'true');
+                cardDiv.setAttribute('ondragstart', 'drag(event)');
                 cardDiv.innerHTML = `
                     <input type="checkbox" id="${card.id}" value="${card.name}">
                     <label for="${card.id}">${card.name}</label>
@@ -136,8 +184,8 @@
         }
 
         // Display card image based on search input
-        document.getElementById('search').addEventListener('input', async (event) => {
-            const query = event.target.value;
+        document.getElementById('search-card').addEventListener('click', async () => {
+            const query = document.getElementById('search').value;
             if (query) {
                 const response = await fetch('https://ygoprodeck.com/api/v7/cardinfo.php');
                 const data = await response.json();
@@ -156,6 +204,57 @@
             } else {
                 document.getElementById('card-image').innerHTML = ''; // Clear image if search is empty
             }
+        });
+
+        // Allow drop functionality
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        // Handle card drop
+        function drop(event) {
+            event.preventDefault();
+            const cardName = event.dataTransfer.getData("text");
+            addCardToChoosingDeck(cardName);
+        }
+
+        // Drag card function
+        function drag(event) {
+            const cardName = event.target.querySelector('label').innerText;
+            event.dataTransfer.setData("text", cardName);
+        }
+
+        // Add card to choosing deck
+        function addCardToChoosingDeck(cardName) {
+            const chosenDeck = document.getElementById('choosing-deck');
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('chosen-card');
+            cardDiv.textContent = cardName;
+            cardDiv.onclick = () => {
+                cardDiv.classList.toggle('selected');
+            };
+            chosenDeck.appendChild(cardDiv);
+        }
+
+        // Delete selected card from choosing deck
+        document.getElementById('delete-card').addEventListener('click', () => {
+            const chosenCards = document.querySelectorAll('#choosing-deck .chosen-card.selected');
+            chosenCards.forEach(card => {
+                card.remove();
+            });
+        });
+
+        // Add chosen cards to the main deck
+        document.getElementById('add-to-deck').addEventListener('click', () => {
+            const chosenCards = document.querySelectorAll('#choosing-deck .chosen-card');
+            const selectedCardNames = [];
+            chosenCards.forEach(card => {
+                selectedCardNames.push(card.textContent);
+            });
+            const savedDeck = JSON.parse(localStorage.getItem('userDeck')) || [];
+            const updatedDeck = [...new Set([...savedDeck, ...selectedCardNames])]; // Remove duplicates
+            localStorage.setItem('userDeck', JSON.stringify(updatedDeck));
+            alert('Added to your deck: ' + selectedCardNames.join(', '));
         });
 
         // Initialize the app
