@@ -39,7 +39,6 @@
             border: 1px solid white;
             background-color: rgba(255,255,255,0.1);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
@@ -95,7 +94,7 @@
                     <div class="spell-slot" id="yusei-spell-4"></div>
                     <div class="spell-slot" id="yusei-spell-5"></div>
                 </div>
-                <!-- Card info section -->
+                <!-- Move card info to appear below the zones and outside the slots -->
                 <div class="card-info" id="yusei-card-info"></div>
             </div>
             <div class="ai-field">
@@ -104,82 +103,4 @@
                     <div class="monster-slot" id="jack-monster-1"></div>
                     <div class="monster-slot" id="jack-monster-2"></div>
                     <div class="monster-slot" id="jack-monster-3"></div>
-                    <div class="monster-slot" id="jack-monster-4"></div>
-                    <div class="monster-slot" id="jack-monster-5"></div>
-                </div>
-                <div class="spell-trap-zone" id="jack-spell-zone">
-                    <div class="spell-slot" id="jack-spell-1"></div>
-                    <div class="spell-slot" id="jack-spell-2"></div>
-                    <div class="spell-slot" id="jack-spell-3"></div>
-                    <div class="spell-slot" id="jack-spell-4"></div>
-                    <div class="spell-slot" id="jack-spell-5"></div>
-                </div>
-                <!-- Card info section -->
-                <div class="card-info" id="jack-card-info"></div>
-            </div>
-        </div>
-        <div class="controls">
-            <button id="draw-button">Draw Card</button>
-            <button id="end-turn-button">End Turn</button>
-        </div>
-    </div>
-    <script>
-        // Sample card database
-        const cards = [
-            { name: "Stardust Dragon", level: 8, atk: 2500, def: 2000, ability: "Negate the activation of a Spell Card." },
-            { name: "Junk Warrior", level: 5, atk: 2300, def: 1300, ability: "Gain ATK equal to the combined levels of all other monsters on your field." },
-            { name: "Black Rose Dragon", level: 7, atk: 2400, def: 1800, ability: "Once per turn, you can destroy all other cards on the field." },
-            { name: "Formula Synchron", level: 2, atk: 200, def: 150, ability: "When this card is Synchro Summoned, draw 1 card." },
-            { name: "Tuningware", level: 1, atk: 100, def: 100, ability: "If this card is sent to the GY for a Synchro Summon, draw 1 card." },
-            { name: "Shooting Star Dragon", level: 10, atk: 3300, def: 2500, ability: "Once per turn, you can negate the activation of a Spell/Trap Card." },
-            { name: "Quillbolt Hedgehog", level: 2, atk: 800, def: 600, ability: "Can be Special Summoned from the GY." },
-            { name: "Goyo Guardian", level: 6, atk: 2800, def: 2400, ability: "When this card destroys an opponent's monster, take control of it." },
-            { name: "Nitro Warrior", level: 7, atk: 2800, def: 2000, ability: "Gains ATK equal to the levels of any monsters used for its Synchro Summon." },
-            { name: "Road Warrior", level: 5, atk: 2300, def: 1600, ability: "Once per turn, you can Special Summon a Level 2 or lower monster from your hand." }
-        ];
-
-        // Function to draw random cards
-        function drawRandomCards(num) {
-            const drawnCards = [];
-            while (drawnCards.length < num) {
-                const randomIndex = Math.floor(Math.random() * cards.length);
-                drawnCards.push(cards[randomIndex]);
-            }
-            return drawnCards;
-        }
-
-        // Function to display cards on Yusei's field
-        function displayCards() {
-            const yuseiCards = drawRandomCards(5);
-            let cardInfoHTML = '';
-            for (let i = 0; i < yuseiCards.length; i++) {
-                const card = yuseiCards[i];
-                document.getElementById(`yusei-monster-${i + 1}`).innerHTML = `
-                    <strong>${card.name}</strong><br>
-                    Level: ${card.level}<br>
-                    ${card.atk} / ${card.def}<br>
-                    <em>${card.ability}</em>
-                `;
-                cardInfoHTML += `
-                    <div>
-                        <strong>${card.name}</strong> - Level: ${card.level}, ATK: ${card.atk}, DEF: ${card.def}<br>
-                        Ability: <em>${card.ability}</em><br><br>
-                    </div>
-                `;
-            }
-            document.getElementById('yusei-card-info').innerHTML = cardInfoHTML;
-        }
-
-        document.getElementById('draw-button').addEventListener('click', function() {
-            displayCards();
-        });
-
-        document.getElementById('end-turn-button').addEventListener('click', function() {
-            alert("End Yusei Fudo's turn!");
-        });
-
-        // Initial display of cards
-        displayCards();
-    </script>
-</body>
-</html>
+                    <div class="monster-slot" id="jack-mon
