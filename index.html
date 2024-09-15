@@ -1,187 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blub's Snake Game</title>
-  <style>
-    body {
-      background-color: grey; /* Grey color code */
-      /* You can adjust the shade of grey by changing the hex color code */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blubs Games</title>
+    <style>
+        body {
+            background-color: grey;
+            font-family: Arial, sans-serif;
+        }
 
-    #gameCanvas {
-      border: 5px solid black; /* Add a black border around the canvas */
-    }
-  </style>
+        h1 {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .button-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="1400" height="800"></canvas>
-  <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
-  <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
-  <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food.h1>first play the game. Then when you die, you put your user name in the box and press submit score</h1></h2></p>
-  <a href="firstver.html"><button>Click here to play the first version of the game</button></a>
 
-  <!-- Leaderboard HTML -->
-  <div class="leaderboard">
-    <h2>Leaderboard</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Player</th>
-          <th>Score</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboardBody">
-        <!-- Leaderboard rows will be dynamically added here -->
-        <!-- Placeholder message -->
-        <tr>
-          <td colspan="3">Loading leaderboard...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <!-- Input box for username -->
-  <input type="text" id="usernameInput" placeholder="Enter your username">
-  <!-- Button to submit score -->
-  <button onclick="submitScore()">Submit Score</button>
+    <h1>Blubs Games</h1>
 
-  <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+    <div class="button-container">
+        <button onclick="window.location.href='Yugioh.html'">Yugioh</button>
+        <button onclick="window.location.href='ai.html'">AI</button>
+        <button onclick="window.location.href='asa.html'">dont click</button>
+        <button onclick="window.location.href='clean_mode.html'">Clean Mode</button>
+        <button onclick="window.location.href='duel.html'">Duel Page</button>
+        <button onclick="window.location.href='firstever.html'">First Ever</button>
+        <button onclick="window.location.href='snake.html'">Slither Quest</button>
+        <button onclick="window.location.href='test.html'">Test</button>
+    </div>
 
-    const box = 20;
-    let snake = [{x: 200, y: 200}];
-    let food = {x: 0, y: 0};
-    let score = 0;
-    let dx = 0;
-    let dy = 0;
-
-    // Initialize leaderboard on page load
-    window.onload = function() {
-      displayScores();
-    }
-
-    function randomFood() {
-      food.x = Math.floor(Math.random() * (canvas.width / box)) * box;
-      food.y = Math.floor(Math.random() * (canvas.height / box)) * box;
-    }
-
-    function drawSnake() {
-      ctx.fillStyle = 'orange';
-      ctx.fillRect(snake[0].x, snake[0].y, box, box);
-
-      ctx.fillStyle = 'black';
-      for (let i = 1; i < snake.length; i++) {
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-      }
-    }
-
-    function drawFood() {
-      ctx.fillStyle = 'red';
-      ctx.fillRect(food.x, food.y, box, box);
-    }
-
-    function drawScore() {
-      ctx.fillStyle = 'black';
-      ctx.font = '20px Arial';
-      ctx.fillText('Score: ' + score, 10, 30);
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawSnake();
-      drawFood();
-      drawScore();
-    }
-
-    function moveSnake() {
-      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-      snake.unshift(head);
-
-      if (head.x === food.x && head.y === food.y) {
-        score++;
-        randomFood();
-      } else {
-        snake.pop();
-      }
-    }
-
-    function checkCollision() {
-      if (
-        snake[0].x < 0 ||
-        snake[0].x >= canvas.width ||
-        snake[0].y < 0 ||
-        snake[0].y >= canvas.height ||
-        snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)
-      ) {
-        clearInterval(gameLoop);
-        alert('Game Over! Your score is ' + score);
-        // Save score to local storage
-        localStorage.setItem('currentScore', score);
-        // Update leaderboard display
-        displayScores();
-      }
-    }
-
-    function update() {
-      moveSnake();
-      checkCollision();
-      draw();
-    }
-
-    // Retrieve scores from local storage
-    function displayScores() {
-      const leaderboardBody = document.getElementById('leaderboardBody');
-      leaderboardBody.innerHTML = ''; // Clear previous entries
-      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      // Sort scores in descending order
-      scores.sort((a, b) => b.score - a.score);
-      // Add scores to the leaderboard table
-      scores.forEach((entry, index) => {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${entry.username}</td>
-          <td>${entry.score}</td>
-        `;
-        leaderboardBody.appendChild(newRow);
-      });
-    }
-
-    function submitScore() {
-      const username = document.getElementById('usernameInput').value;
-      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      // Add new score to the scores array
-      scores.push({ username: username, score: parseInt(score) });
-      // Update local storage with the new scores
-      localStorage.setItem('snakeScores', JSON.stringify(scores));
-      // Update leaderboard display
-      displayScores();
-    }
-
-    randomFood();
-    const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
-
-    // Keyboard event listener
-    document.addEventListener('keydown', function(event) {
-      // Arrow keys
-      if (event.keyCode === 37 && dx !== box) { // Left arrow key
-        dx = -box;
-        dy = 0;
-      } else if (event.keyCode === 39 && dx !== -box) { // Right arrow key
-        dx = box;
-        dy = 0;
-      } else if (event.keyCode === 38 && dy !== box) { // Up arrow key
-        dx = 0;
-        dy = -box;
-      } else if (event.keyCode === 40 && dy !== -box) { // Down arrow key
-        dx = 0;
-        dy = box;
-      }
-    });
-  </script>
 </body>
 </html>
-
