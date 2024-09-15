@@ -39,7 +39,6 @@
             border: 1px solid white;
             background-color: rgba(255, 255, 255, 0.1);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
@@ -54,6 +53,25 @@
             margin: 0 10px;
             font-size: 16px;
             cursor: pointer;
+        }
+
+        /* Add borders and layout for card info below spell/trap fields */
+        .card-info {
+            border: 2px solid white;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: left;
+            display: block;
+        }
+
+        .card-info strong {
+            font-size: 18px;
+        }
+
+        .card-info em {
+            font-size: 14px;
         }
     </style>
 </head>
@@ -77,6 +95,8 @@
                     <div class="spell-slot" id="yusei-spell-4"></div>
                     <div class="spell-slot" id="yusei-spell-5"></div>
                 </div>
+                <!-- Ensure card info displays below the field -->
+                <div class="card-info" id="yusei-card-info"></div>
             </div>
             <div class="ai-field">
                 <h2>Jack Atlas's Field</h2>
@@ -94,6 +114,8 @@
                     <div class="spell-slot" id="jack-spell-4"></div>
                     <div class="spell-slot" id="jack-spell-5"></div>
                 </div>
+                <!-- Ensure card info displays below the field -->
+                <div class="card-info" id="jack-card-info"></div>
             </div>
         </div>
         <div class="controls">
@@ -101,9 +123,8 @@
             <button id="end-turn-button">End Turn</button>
         </div>
     </div>
-
     <script>
-        // Sample card database for both players
+        // Sample card database
         const cards = [
             { name: "Stardust Dragon", level: 8, atk: 2500, def: 2000, ability: "Negate the activation of a Spell Card." },
             { name: "Junk Warrior", level: 5, atk: 2300, def: 1300, ability: "Gain ATK equal to the combined levels of all other monsters on your field." },
@@ -132,17 +153,25 @@
         // Function to display cards on the field
         function displayCards(player) {
             const drawnCards = drawRandomCards(5);
-            const monsterZone = player === "Yusei" ? "yusei" : "jack";
+            const cardInfoId = player === "Yusei" ? "yusei-card-info" : "jack-card-info";
+            let cardInfoHTML = '';
             
             for (let i = 0; i < drawnCards.length; i++) {
                 const card = drawnCards[i];
-                document.getElementById(`${monsterZone}-monster-${i + 1}`).innerHTML = `
+                document.getElementById(`${player.toLowerCase()}-monster-${i + 1}`).innerHTML = `
                     <strong>${card.name}</strong><br>
                     Level: ${card.level}<br>
                     ${card.atk} / ${card.def}<br>
                     <em>${card.ability}</em>
                 `;
+                cardInfoHTML += `
+                    <div>
+                        <strong>${card.name}</strong> - Level: ${card.level}, ATK: ${card.atk}, DEF: ${card.def}<br>
+                        Ability: <em>${card.ability}</em><br><br>
+                    </div>
+                `;
             }
+            document.getElementById(cardInfoId).innerHTML = cardInfoHTML;
         }
 
         document.getElementById('draw-button').addEventListener('click', function() {
@@ -155,19 +184,4 @@
             }
         });
 
-        document.getElementById('end-turn-button').addEventListener('click', function() {
-            if (turn === "Yusei") {
-                alert("Yusei ends his turn. Now it's Jack's turn.");
-                turn = "Jack";
-            } else {
-                alert("Jack ends his turn. Now it's Yusei's turn.");
-                turn = "Yusei";
-            }
-        });
-
-        // Initial display of Yusei's and Jack's cards
-        displayCards("Yusei");
-        displayCards("Jack");
-    </script>
-</body>
-</html>
+        document.getElementById('end-turn
