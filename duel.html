@@ -55,6 +55,24 @@
             font-size: 16px;
             cursor: pointer;
         }
+
+        /* Add borders and layout for card info below spell/trap fields */
+        .card-info {
+            border: 2px solid white;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-align: left;
+        }
+
+        .card-info strong {
+            font-size: 18px;
+        }
+
+        .card-info em {
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +95,8 @@
                     <div class="spell-slot" id="yusei-spell-4"></div>
                     <div class="spell-slot" id="yusei-spell-5"></div>
                 </div>
+                <!-- Card info section -->
+                <div class="card-info" id="yusei-card-info"></div>
             </div>
             <div class="ai-field">
                 <h2>Jack Atlas's Field</h2>
@@ -94,6 +114,8 @@
                     <div class="spell-slot" id="jack-spell-4"></div>
                     <div class="spell-slot" id="jack-spell-5"></div>
                 </div>
+                <!-- Card info section -->
+                <div class="card-info" id="jack-card-info"></div>
             </div>
         </div>
         <div class="controls">
@@ -129,6 +151,7 @@
         // Function to display cards on Yusei's field
         function displayCards() {
             const yuseiCards = drawRandomCards(5);
+            let cardInfoHTML = '';
             for (let i = 0; i < yuseiCards.length; i++) {
                 const card = yuseiCards[i];
                 document.getElementById(`yusei-monster-${i + 1}`).innerHTML = `
@@ -137,16 +160,21 @@
                     ${card.atk} / ${card.def}<br>
                     <em>${card.ability}</em>
                 `;
+                cardInfoHTML += `
+                    <div>
+                        <strong>${card.name}</strong> - Level: ${card.level}, ATK: ${card.atk}, DEF: ${card.def}<br>
+                        Ability: <em>${card.ability}</em><br><br>
+                    </div>
+                `;
             }
+            document.getElementById('yusei-card-info').innerHTML = cardInfoHTML;
         }
 
         document.getElementById('draw-button').addEventListener('click', function() {
-            // Add logic to handle drawing a card for Yusei Fudo
-            alert("Draw a card for Yusei Fudo!");
+            displayCards();
         });
 
         document.getElementById('end-turn-button').addEventListener('click', function() {
-            // Add logic to handle ending the turn
             alert("End Yusei Fudo's turn!");
         });
 
