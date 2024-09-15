@@ -153,9 +153,10 @@
         // Function to display cards on the field
         function displayCards(player) {
             const drawnCards = drawRandomCards(5);
+            const monsterZoneId = player === "Yusei" ? "yusei-monster-zone" : "jack-monster-zone";
             const cardInfoId = player === "Yusei" ? "yusei-card-info" : "jack-card-info";
-            let cardInfoHTML = '';
             
+            let cardInfoHTML = '';
             for (let i = 0; i < drawnCards.length; i++) {
                 const card = drawnCards[i];
                 document.getElementById(`${player.toLowerCase()}-monster-${i + 1}`).innerHTML = `
@@ -180,8 +181,4 @@
                 displayCards("Yusei");
             } else {
                 alert("Jack draws a card!");
-                displayCards("Jack");
-            }
-        });
-
-        document.getElementById('end-turn
+               
