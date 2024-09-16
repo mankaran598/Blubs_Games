@@ -138,6 +138,9 @@
             { name: "Road Warrior", level: 5, atk: 2300, def: 1600, ability: "Once per turn, you can Special Summon a Level 2 or lower monster from your hand." }
         ];
 
+        // Track the drawn cards
+        let yuseiDrawnCards = [];
+
         // Function to draw random cards
         function drawRandomCards(num) {
             const drawnCards = [];
@@ -148,32 +151,37 @@
             return drawnCards;
         }
 
-        // Function to display cards on Yusei's field
+        // Function to display the drawn cards with summon buttons
         function displayCards() {
-            const yuseiCards = drawRandomCards(5);
+            yuseiDrawnCards = drawRandomCards(5); // Draw 5 random cards for Yusei
             let cardInfoHTML = '';
-            for (let i = 0; i < yuseiCards.length; i++) {
-                const card = yuseiCards[i];
+            for (let i = 0; i < yuseiDrawnCards.length; i++) {
+                const card = yuseiDrawnCards[i];
                 cardInfoHTML += `
                     <div>
                         <strong>${card.name}</strong> - Level: ${card.level}, ATK: ${card.atk}, DEF: ${card.def}<br>
-                        Ability: <em>${card.ability}</em><br><br>
+                        Ability: <em>${card.ability}</em><br>
+                        <button onclick="summonCard(${i})">Summon</button><br><br>
                     </div>
                 `;
             }
             document.getElementById('yusei-card-info').innerHTML = cardInfoHTML;
         }
 
-        document.getElementById('draw-button').addEventListener('click', function() {
-            displayCards();
-        });
+        // Function to summon a card to the monster zone
+        function summonCard(cardIndex) {
+            const card = yuseiDrawnCards[cardIndex];
+            const emptySlot = findEmptyMonsterSlot('yusei');
+            if (emptySlot) {
+                emptySlot.innerHTML = `
+                    <strong>${card.name}</strong><br>
+                    ATK: ${card.atk} / DEF: ${card.def}<br>
+                    <em>${card.ability}</em>
+                `;
+            } else {
+                alert("No available monster slot!");
+            }
+        }
 
-        document.getElementById('end-turn-button').addEventListener('click', function() {
-            alert("End Yusei Fudo's turn!");
-        });
-
-        // Initial display of cards
-        displayCards();
-    </script>
-</body>
-</html>
+        // Function to find an empty monster slot
+        function findEmptyMonsterSlot
