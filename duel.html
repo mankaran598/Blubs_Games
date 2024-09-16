@@ -35,14 +35,13 @@
 
         .monster-slot, .spell-slot {
             width: 18%;
-            height: 150px;
+            height: 100px;
             border: 1px solid white;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255,255,255,0.1);
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 12px;
         }
 
         .controls {
@@ -82,14 +81,14 @@
         <div class="field">
             <div class="player-field">
                 <h2>Yusei Fudo's Field</h2>
-                <div class="monster-zone">
+                <div class="monster-zone" id="yusei-monster-zone">
                     <div class="monster-slot" id="yusei-monster-1"></div>
                     <div class="monster-slot" id="yusei-monster-2"></div>
                     <div class="monster-slot" id="yusei-monster-3"></div>
                     <div class="monster-slot" id="yusei-monster-4"></div>
                     <div class="monster-slot" id="yusei-monster-5"></div>
                 </div>
-                <div class="spell-trap-zone">
+                <div class="spell-trap-zone" id="yusei-spell-zone">
                     <div class="spell-slot" id="yusei-spell-1"></div>
                     <div class="spell-slot" id="yusei-spell-2"></div>
                     <div class="spell-slot" id="yusei-spell-3"></div>
@@ -101,14 +100,14 @@
             </div>
             <div class="ai-field">
                 <h2>Jack Atlas's Field</h2>
-                <div class="monster-zone">
+                <div class="monster-zone" id="jack-monster-zone">
                     <div class="monster-slot" id="jack-monster-1"></div>
                     <div class="monster-slot" id="jack-monster-2"></div>
                     <div class="monster-slot" id="jack-monster-3"></div>
                     <div class="monster-slot" id="jack-monster-4"></div>
                     <div class="monster-slot" id="jack-monster-5"></div>
                 </div>
-                <div class="spell-trap-zone">
+                <div class="spell-trap-zone" id="jack-spell-zone">
                     <div class="spell-slot" id="jack-spell-1"></div>
                     <div class="spell-slot" id="jack-spell-2"></div>
                     <div class="spell-slot" id="jack-spell-3"></div>
@@ -139,8 +138,6 @@
             { name: "Road Warrior", level: 5, atk: 2300, def: 1600, ability: "Once per turn, you can Special Summon a Level 2 or lower monster from your hand." }
         ];
 
-        let turn = "Yusei"; // Variable to track whose turn it is
-
         // Function to draw random cards
         function drawRandomCards(num) {
             const drawnCards = [];
@@ -151,40 +148,32 @@
             return drawnCards;
         }
 
-        // Function to display cards in the monster zones
-        function displayCards(player) {
-            const drawnCards = drawRandomCards(5); // draw 5 random cards
-            const cardInfoDiv = player === "Yusei" ? "yusei-card-info" : "jack-card-info";
-
-            // Loop through the monster slots and add cards
-            for (let i = 0; i < drawnCards.length; i++) {
-                const card = drawnCards[i];
-                const monsterSlot = document.getElementById(`${player.toLowerCase()}-monster-${i + 1}`);
-                monsterSlot.innerHTML = `
-                    <strong>${card.name}</strong><br>
-                    Level: ${card.level}<br>
-                    ATK: ${card.atk} / DEF: ${card.def}<br>
-                    <em>${card.ability}</em>
-                `;
-            }
-
-            // Display card info below
+        // Function to display cards on Yusei's field
+        function displayCards() {
+            const yuseiCards = drawRandomCards(5);
             let cardInfoHTML = '';
-            drawnCards.forEach(card => {
+            for (let i = 0; i < yuseiCards.length; i++) {
+                const card = yuseiCards[i];
                 cardInfoHTML += `
                     <div>
                         <strong>${card.name}</strong> - Level: ${card.level}, ATK: ${card.atk}, DEF: ${card.def}<br>
                         Ability: <em>${card.ability}</em><br><br>
                     </div>
                 `;
-            });
-            document.getElementById(cardInfoDiv).innerHTML = cardInfoHTML;
+            }
+            document.getElementById('yusei-card-info').innerHTML = cardInfoHTML;
         }
 
         document.getElementById('draw-button').addEventListener('click', function() {
-            if (turn === "Yusei") {
-                alert("Yusei draws 5 cards!");
-                displayCards("Yusei");
-                turn = "Jack";
-            } else {
-               
+            displayCards();
+        });
+
+        document.getElementById('end-turn-button').addEventListener('click', function() {
+            alert("End Yusei Fudo's turn!");
+        });
+
+        // Initial display of cards
+        displayCards();
+    </script>
+</body>
+</html>
