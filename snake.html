@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="1400" height="800"></canvas>
+  <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
   <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food.h1>first play the game. Then when you die, you put your user name in the box and press submit score</h1></h2></p>
@@ -85,7 +85,7 @@
 
     function drawScore() {
       ctx.fillStyle = 'black';
-      ctx.font = '20px Arial';
+      ctx.font = '30px Arial';
       ctx.fillText('Score: ' + score, 10, 30);
     }
 
