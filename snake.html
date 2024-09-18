@@ -7,7 +7,6 @@
   <style>
     body {
       background-color: grey; /* Grey color code */
-      /* You can adjust the shade of grey by changing the hex color code */
     }
 
     #gameCanvas {
@@ -19,7 +18,7 @@
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
-  <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food.h1>first play the game. Then when you die, you put your user name in the box and press submit score</h1></h2></p>
+  <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food. First play the game. Then when you die, you put your user name in the box and press submit score</h1></h2></p>
   <a href="firstver.html"><button>Click here to play the first version of the game</button></a>
 
   <!-- Leaderboard HTML -->
@@ -35,16 +34,13 @@
       </thead>
       <tbody id="leaderboardBody">
         <!-- Leaderboard rows will be dynamically added here -->
-        <!-- Placeholder message -->
         <tr>
           <td colspan="3">Loading leaderboard...</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <!-- Input box for username -->
   <input type="text" id="usernameInput" placeholder="Enter your username">
-  <!-- Button to submit score -->
   <button onclick="submitScore()">Submit Score</button>
 
   <script>
@@ -58,7 +54,6 @@
     let dx = 0;
     let dy = 0;
 
-    // Initialize leaderboard on page load
     window.onload = function() {
       displayScores();
     }
@@ -118,9 +113,7 @@
       ) {
         clearInterval(gameLoop);
         alert('Game Over! Your score is ' + score);
-        // Save score to local storage
         localStorage.setItem('currentScore', score);
-        // Update leaderboard display
         displayScores();
       }
     }
@@ -131,14 +124,11 @@
       draw();
     }
 
-    // Retrieve scores from local storage
     function displayScores() {
       const leaderboardBody = document.getElementById('leaderboardBody');
-      leaderboardBody.innerHTML = ''; // Clear previous entries
+      leaderboardBody.innerHTML = '';
       const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      // Sort scores in descending order
       scores.sort((a, b) => b.score - a.score);
-      // Add scores to the leaderboard table
       scores.forEach((entry, index) => {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
@@ -153,30 +143,27 @@
     function submitScore() {
       const username = document.getElementById('usernameInput').value;
       const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      // Add new score to the scores array
       scores.push({ username: username, score: parseInt(score) });
-      // Update local storage with the new scores
       localStorage.setItem('snakeScores', JSON.stringify(scores));
-      // Update leaderboard display
       displayScores();
     }
 
     randomFood();
-    const gameLoop = setInterval(update, 69); // Increased the speed to update every 50 milliseconds
+    const gameLoop = setInterval(update, 69);
 
     // Keyboard event listener
     document.addEventListener('keydown', function(event) {
-      // Arrow keys
-      if (event.keyCode === 37 && dx !== box) { // Left arrow key
+      // Arrow keys or WASD
+      if ((event.keyCode === 37 || event.key === 'a') && dx !== box) { // Left arrow key or 'A'
         dx = -box;
         dy = 0;
-      } else if (event.keyCode === 39 && dx !== -box) { // Right arrow key
+      } else if ((event.keyCode === 39 || event.key === 'd') && dx !== -box) { // Right arrow key or 'D'
         dx = box;
         dy = 0;
-      } else if (event.keyCode === 38 && dy !== box) { // Up arrow key
+      } else if ((event.keyCode === 38 || event.key === 'w') && dy !== box) { // Up arrow key or 'W'
         dx = 0;
         dy = -box;
-      } else if (event.keyCode === 40 && dy !== -box) { // Down arrow key
+      } else if ((event.keyCode === 40 || event.key === 's') && dy !== -box) { // Down arrow key or 'S'
         dx = 0;
         dy = box;
       }
