@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Feed</title>
+    <title>Mirrored Camera Feed</title>
+    <head><h1>Camera</h1></head>
     <style>
         body, html {
             margin: 0;
@@ -28,6 +29,7 @@
             border: 2px solid #fff; /* Optional white border */
             width: 800px;
             height: 600px;
+            transform: scaleX(-1); /* Mirror the video horizontally */
         }
     </style>
 </head>
@@ -42,14 +44,4 @@
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function(err) {
-                    console.error("Error accessing camera: " + err);
-                });
-        } else {
-            alert("Your browser doesn't support accessing the camera.");
-        }
-    </script>
-</body>
-</html>
+                    video.s
