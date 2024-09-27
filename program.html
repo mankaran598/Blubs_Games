@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Feed</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #333; /* Dark grey background */
+        }
+
+        .container {
+            width: 800px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #333; /* Match the body background */
+        }
+
+        video {
+            border: 2px solid #fff; /* Optional white border */
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <video id="video" width="800" height="600" autoplay></video>
+    </div>
+    <script>
+        const video = document.getElementById('video');
+
+        // Request access to the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    console.error("Error accessing camera: " + err);
+                });
+        } else {
+            alert("Your browser doesn't support accessing the camera.");
+        }
+    </script>
+</body>
+</html>
