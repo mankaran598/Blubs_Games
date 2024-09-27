@@ -3,53 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirrored Camera Feed</title>
+    <title>Join Meeting with Code</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #333; /* Dark grey background */
+            background-color: #333;
+            color: white;
+            font-family: Arial, sans-serif;
         }
 
-        .container {
-            width: 800px;
-            height: 600px;
+        #video-grid {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #333; /* Match the body background */
+            flex-direction: row;
+            gap: 10px;
         }
 
         video {
-            border: 2px solid #fff; /* Optional white border */
-            width: 800px;
-            height: 600px;
-            transform: scaleX(-1); /* Mirror the video horizontally */
+            width: 300px;
+            height: 200px;
+            border: 2px solid white;
+            transform: scaleX(-1); /* Mirror the video */
+        }
+
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <video id="video" width="800" height="600" autoplay></video>
-    </div>
-    <script>
-        const video = document.getElementById('video');
+    <h1>Join a Meeting</h1>
+    <input type="text" id="roomCode" placeholder="Enter 6-letter code (e.g., burtle)" maxlength="6">
+    <button id="joinBtn">OK</button>
 
-        // Request access to the camera
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    video.srcObject = stream;
-                })
-                .catch(function(err) {
-                    console.error("Error accessing camera: " + err);
+    <div id="video-grid">
+        <video id="localVideo" autoplay muted></video> <!-- Local user video -->
+        <video id="remoteVideo" autoplay></video> <!-- Remote user video -->
+    </div>
+
+    <script>
+        const roomCodeInput = document.getElementById('roomCode');
+        const joinBtn = document.getElementById('joinBtn');
+        const localVideo = document.getElementById('localVideo');
+        const remoteVideo = document.getElementById('remoteVideo');
+        let localStream;
+        let peerConnection;
+
+        const servers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }; // ICE servers for WebRTC
+
+        // Get access to camera and microphone
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                localVideo.srcObject = stream;
+                localStream = stream;
+            })
+            .catch(error => console.error("Error accessing media devices.", error));
+
+        joinBtn.addEventListener('click', () => {
+            const roomCode = roomCodeInput.value.trim().toLowerCase();
+            if (roomCode.length === 6) {
+                joinMeeting(roomCode);
+            } else {
+                alert("Please enter a valid 6-letter code.");
+            }
+        });
+
+        function joinMeeting(roomCode) {
+            // Signaling logic (using localStorage for demo)
+            if (localStorage.getItem(roomCode)) {
+                // If the room exists, start as the second participant
+                const offer = JSON.parse(localStorage.getItem(roomCode));
+                createAnswer(offer, roomCode);
+            } else {
+                // Start a new meeting and save the offer
+                createOffer(roomCode);
+            }
+        }
+
+        function createOffer(roomCode) {
+            peerConnection = new RTCPeerConnection(servers);
+            peerConnection.addStream(localStream);
+
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    console.log('New ICE candidate:', event.candidate);
+                }
+            };
+
+            peerConnection.onaddstream = (event) => {
+                remoteVideo.srcObject = event.stream;
+            };
+
+            peerConnection.createOffer().then(offer => {
+                peerConnection.setLocalDescription(offer);
+                localStorage.setItem(roomCode, JSON.stringify(offer)); // Store the offer in localStorage for the demo
+            });
+        }
+
+        function createAnswer(offer, roomCode) {
+            peerConnection = new RTCPeerConnection(servers);
+            peerConnection.addStream(localStream);
+
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    console.log('New ICE candidate:', event.candidate);
+                }
+            };
+
+            peerConnection.onaddstream = (event) => {
+                remoteVideo.srcObject = event.stream;
+            };
+
+            peerConnection.setRemoteDescription(new RTCSessionDescription(offer)).then(() => {
+                peerConnection.createAnswer().then(answer => {
+                    peerConnection.setLocalDescription(answer);
+                    localStorage.setItem(roomCode, JSON.stringify(answer)); // Store the answer in localStorage for the demo
                 });
-        } else {
-            alert("Your browser doesn't support accessing the camera.");
+            });
         }
     </script>
 </body>
