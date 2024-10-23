@@ -18,16 +18,24 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const grassGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const grassMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cobblestoneMaterial = new THREE.MeshBasicMaterial({ color: 0x8B8B83 }); // Dark gray for cobblestone
 
         const createWorld = () => {
             const worldSize = 5; // Adjust for size of the world
             for (let x = -worldSize; x <= worldSize; x++) {
                 for (let z = -worldSize; z <= worldSize; z++) {
-                    const cube = new THREE.Mesh(geometry, material);
-                    cube.position.set(x, 0, z);
-                    scene.add(cube);
+                    // Create cobblestone layers
+                    for (let y = -3; y < 0; y++) {
+                        const cobblestone = new THREE.Mesh(cobblestoneMaterial, cobblestoneMaterial);
+                        cobblestone.position.set(x, y, z);
+                        scene.add(cobblestone);
+                    }
+                    // Create grass layer
+                    const grass = new THREE.Mesh(grassGeometry, grassMaterial);
+                    grass.position.set(x, 0, z);
+                    scene.add(grass);
                 }
             }
         };
