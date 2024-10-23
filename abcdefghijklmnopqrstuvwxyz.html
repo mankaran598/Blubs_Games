@@ -37,6 +37,17 @@
         const speed = 0.1;
         let isFlyingUp = false;
         let isFlyingDown = false;
+        let cursorVisible = false;
+
+        document.addEventListener('mousemove', (event) => {
+            if (!cursorVisible) {
+                const movementX = event.movementX || 0;
+                const movementY = event.movementY || 0;
+                camera.rotation.y -= movementX * 0.002; // Adjust sensitivity
+                camera.rotation.x -= movementY * 0.002; // Adjust sensitivity
+                camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x)); // Clamp vertical rotation
+            }
+        });
 
         function animate() {
             requestAnimationFrame(animate);
@@ -55,6 +66,7 @@
                 case 'd': camera.position.x += speed; break;
                 case ' ': isFlyingUp = true; break;
                 case 'Shift': isFlyingDown = true; break;
+                case 'F7': toggleCursor(); break;
             }
         });
 
@@ -64,6 +76,16 @@
                 case 'Shift': isFlyingDown = false; break;
             }
         });
+
+        function toggleCursor() {
+            cursorVisible = !cursorVisible;
+            document.body.style.cursor = cursorVisible ? 'auto' : 'none';
+            if (!cursorVisible) {
+                document.body.requestPointerLock(); // Lock the pointer
+            } else {
+                document.exitPointerLock(); // Unlock the pointer
+            }
+        }
 
         animate();
     </script>
