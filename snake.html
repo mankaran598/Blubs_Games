@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blub's Snake Game</title>
+ <h1><b>Press p to pause/unpause</b></h1>
   <style>
     body {
       background-color: grey; /* Grey color code */
@@ -53,6 +54,8 @@
     let score = 0;
     let dx = 0;
     let dy = 0;
+    let paused = false; // Game pause state
+    let gameLoop;
 
     window.onload = function() {
       displayScores();
@@ -89,6 +92,12 @@
       drawSnake();
       drawFood();
       drawScore();
+
+      if (paused) {
+        ctx.fillStyle = 'white';
+        ctx.font = '50px Arial';
+        ctx.fillText('PAUSED', canvas.width / 2 - 100, canvas.height / 2);
+      }
     }
 
     function moveSnake() {
@@ -119,9 +128,11 @@
     }
 
     function update() {
-      moveSnake();
-      checkCollision();
-      draw();
+      if (!paused) {
+        moveSnake();
+        checkCollision();
+        draw();
+      }
     }
 
     function displayScores() {
@@ -149,7 +160,7 @@
     }
 
     randomFood();
-    const gameLoop = setInterval(update, 69);
+    gameLoop = setInterval(update, 69);
 
     // Keyboard event listener
     document.addEventListener('keydown', function(event) {
@@ -166,6 +177,16 @@
       } else if ((event.keyCode === 40 || event.key === 's') && dy !== -box) { // Down arrow key or 'S'
         dx = 0;
         dy = box;
+      }
+
+      // Pause game when 'P' is pressed
+      if (event.key === 'p' || event.key === 'P') {
+        paused = !paused;
+        if (!paused) {
+          gameLoop = setInterval(update, 69); // Restart the game loop if unpaused
+        } else {
+          clearInterval(gameLoop); // Stop the game loop when paused
+        }
       }
     });
   </script>
