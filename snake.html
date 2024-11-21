@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blub's Snake Game</title>
-  <h1><b>Press p to pause/unpause</b></h1>
+  <h1><b>Press P to pause/unpause</b></h1>
   <style>
     body {
       background-color: grey; /* Grey color code */
@@ -89,8 +89,7 @@
     window.addEventListener('resize', checkCanvasVisibility);
     window.addEventListener('load', checkCanvasVisibility);
 
-    // Other game code...
-
+    // Game variables
     const box = 20;
     let snake = [{x: 200, y: 200}];
     let food = {x: 0, y: 0};
@@ -231,6 +230,11 @@
         } else {
           clearInterval(gameLoop); // Stop the game loop when paused
         }
+      }
+
+      // Restart game when 'R' is pressed
+      if (event.key === 'r' || event.key === 'R') {
+        location.reload(); // Reloads the page
       }
     });
   </script>
