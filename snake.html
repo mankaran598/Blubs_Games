@@ -1,26 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-   <link rel="icon" type="image/png" href="icons.png">
+  <link rel="icon" type="image/png" href="icons.png">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blub's Snake Game</title>
- <h1><b>Press p to pause/unpause</b></h1>
+  <h1><b>Press p to pause/unpause</b></h1>
   <style>
     body {
-      background-color:grey; /* Grey color code */
+      background-color: grey; /* Grey color code */
     }
 
     #gameCanvas {
       border: 5px solid black; /* Add a black border around the canvas */
     }
+
+    #zoomWarning {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
+  <div id="zoomWarning">
+    Your screen is too small to display the full game.<br>
+    Please zoom out to 50% or 33%.
+  </div>
+
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="https://forms.gle/47VJkFFdrYEVvu9Y9" target="_blank" style="display: inline-block; padding: 20px 40px; background-color: #808080; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; font-size: 20px;">Any bugs? Report them here</a>
-  <p><h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food. First play the game. Then when you die, you put your user name in the box and press submit score</h1></h2></p>
+  <p>
+    <h2>The orange pixel is the head of the snake & the black pixels are the body. The red pixel is the food. First play the game. Then when you die, you put your user name in the box and press submit score</h2>
+  </p>
   <a href="firstver.html"><button>Click here to play the first version of the game</button></a>
 
   <!-- Leaderboard HTML -->
@@ -48,6 +69,27 @@
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const zoomWarning = document.getElementById('zoomWarning');
+
+    function checkCanvasVisibility() {
+      const canvasRect = canvas.getBoundingClientRect();
+      const isFullyVisible =
+        canvasRect.top >= 0 &&
+        canvasRect.left >= 0 &&
+        canvasRect.bottom <= window.innerHeight &&
+        canvasRect.right <= window.innerWidth;
+
+      if (!isFullyVisible) {
+        zoomWarning.style.display = 'block';
+      } else {
+        zoomWarning.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', checkCanvasVisibility);
+    window.addEventListener('load', checkCanvasVisibility);
+
+    // Other game code...
 
     const box = 20;
     let snake = [{x: 200, y: 200}];
@@ -60,6 +102,7 @@
 
     window.onload = function() {
       displayScores();
+      checkCanvasVisibility();
     }
 
     function randomFood() {
