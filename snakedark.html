@@ -94,6 +94,7 @@
     let dx = 0;
     let dy = 0;
     let paused = false;
+    let gameOver = false; // New gameOver flag
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -174,9 +175,12 @@
         snake[0].y >= canvas.height ||
         snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)
       ) {
-        alert('Game Over! Your score is ' + score);
-        localStorage.removeItem('savedGame'); // Clear saved game if the player dies
-        location.reload();
+        if (!gameOver) { // Trigger game over logic only once
+          gameOver = true; // Set the gameOver flag
+          alert('Game Over! Your score is ' + score);
+          localStorage.removeItem('savedGame'); // Clear saved game if the player dies
+          location.reload();
+        }
       }
     }
 
