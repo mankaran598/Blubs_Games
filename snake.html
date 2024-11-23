@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="icons.png">
+  <link rel="icon" type="image/png" href="icons.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <h1><b>Press P to Pause/Unpause</b></h1>
   <title>Blub's Snake Game</title>
@@ -212,6 +212,7 @@
         score = savedGame.score;
         dx = savedGame.dx;
         dy = savedGame.dy;
+        paused = true;  // Pause the game when it's loaded
       } else {
         randomFood();
       }
