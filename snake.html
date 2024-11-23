@@ -8,7 +8,7 @@
   <title>Blub's Snake Game</title>
   <style>
     body {
-      background-color: grey;
+      background-color: #636363;
     }
     #gameCanvas {
       border: 5px solid black;
@@ -43,7 +43,7 @@
       text-align: center;
     }
     th {
-      background-color: #f2f2f2;
+      background-color: #636363;
     }
     button {
       margin: 10px;
@@ -94,6 +94,7 @@
     let dx = 0;
     let dy = 0;
     let paused = false;
+    let gameOver = false; // New gameOver flag
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -174,9 +175,12 @@
         snake[0].y >= canvas.height ||
         snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)
       ) {
-        alert('Game Over! Your score is ' + score);
-        localStorage.removeItem('savedGame'); // Clear saved game if the player dies
-        location.reload();
+        if (!gameOver) { // Trigger game over logic only once
+          gameOver = true; // Set the gameOver flag
+          alert('Game Over! Your score is ' + score);
+          localStorage.removeItem('savedGame'); // Clear saved game if the player dies
+          location.reload();
+        }
       }
     }
 
