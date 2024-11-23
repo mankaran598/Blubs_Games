@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="icons.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <h1><b>Press P to Pause/Unpause</b></h1>
+  <title>Blub's Snake Game</title>
+  <style>
+    body {
+      background-color: #5A5A5A;
+    }
+    #gameCanvas {
+      border: 5px solid white;
+    }
+    #zoomWarning {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      z-index: 1000;
+    }
+    .leaderboard {
+      margin-top: 20px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #5A5A5A;
+    }
+    button {
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="zoomWarning">
+    Your screen is too small to display the full game.<br>
+    Please zoom out to 50% or 33%.
+  </div>
+
+  <canvas id="gameCanvas" width="1500" height="900"></canvas>
+  <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
+  <button onclick="saveGame()" style="font-size: 20px; padding: 20px 20px;">Save Game</button>
+  <a href="firstver.html"><button style="font-size: 20px; padding: 20px 20px;">Click here to play the first version of the game</button></a>
+
+  <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <tr>
+          <td colspan="3">No scores yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <input type="text" id="usernameInput" placeholder="Enter your username">
+  <button onclick="submitScore()">Submit Score</button>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const zoomWarning = document.getElementById('zoomWarning');
+
+    // Game variables
+    const box = 20;
+    let snake = [{x: 200, y: 200}];
+    let food = {x: 0, y: 0};
+    let score = 0;
+    let dx = 0;
+    let dy = 0;
+    let paused = false;
+
+    function checkCanvasVisibility() {
+      const canvasRect = canvas.getBoundingClientRect();
+      const isFullyVisible =
+        canvasRect.top >= 0 &&
+        canvasRect.left >= 0 &&
+        canvasRect.bottom <= window.innerHeight &&
+        canvasRect.right <= window.innerWidth;
+
+      if (!isFullyVisible) {
+        zoomWarning.style.display = 'block';
+      } else {
+        zoomWarning.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', checkCanvasVisibility);
+    window.addEventListener('load', checkCanvasVisibility);
+
+    function randomFood() {
+      food.x = Math.floor(Math.random() * (canvas.width / box)) * box;
+      food.y = Math.floor(Math.random() * (canvas.height / box)) * box;
+    }
+
+    function drawSnake() {
+      ctx.fillStyle = 'orange';
+      ctx.fillRect(snake[0].x, snake[0].y, box, box);
+
+      ctx.fillStyle = 'white';
+      for (let i = 1; i < snake.length; i++) {
+        ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      }
+    }
+
+    function drawFood() {
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x, food.y, box, box);
+    }
+
+    function drawScore() {
+      ctx.fillStyle = 'black';
+      ctx.font = '30px Arial';
+      ctx.fillText('Score: ' + score, 10, 30);
+    }
+
+    function drawPauseScreen() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.font = '50px Arial';
+      ctx.fillText('PAUSED', canvas.width / 2 - 100, canvas.height / 2);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawSnake();
+      drawFood();
+      drawScore();
+    }
+
+    function moveSnake() {
+      const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        randomFood();
+      } else {
+        snake.pop();
+      }
+    }
+
+    function checkCollision() {
+      if (
+        snake[0].x < 0 ||
+        snake[0].x >= canvas.width ||
+        snake[0].y < 0 ||
+        snake[0].y >= canvas.height ||
+        snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)
+      ) {
+        alert('Game Over! Your score is ' + score);
+        localStorage.removeItem('savedGame'); // Clear saved game if the player dies
+        location.reload();
+      }
+    }
+
+    function update() {
+      if (!paused) {
+        moveSnake();
+        checkCollision();
+        draw();
+      } else {
+        drawPauseScreen();
+      }
+    }
+
+    // Save function
+    function saveGame() {
+      const gameState = {
+        snake: snake,
+        food: food,
+        score: score,
+        dx: dx,
+        dy: dy
+      };
+      localStorage.setItem('savedGame', JSON.stringify(gameState));
+      alert('Game saved!');
+    }
+
+    // Load function
+    function loadGame() {
+      const savedGame = JSON.parse(localStorage.getItem('savedGame'));
+      if (savedGame) {
+        snake = savedGame.snake;
+        food = savedGame.food;
+        score = savedGame.score;
+        dx = savedGame.dx;
+        dy = savedGame.dy;
+        paused = true;  // Pause the game when it's loaded
+      } else {
+        randomFood();
+      }
+    }
+
+    // Leaderboard
+    function displayScores() {
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      leaderboardBody.innerHTML = '';
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      scores.sort((a, b) => b.score - a.score);
+      scores.forEach((entry, index) => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${entry.username}</td>
+          <td>${entry.score}</td>
+        `;
+        leaderboardBody.appendChild(newRow);
+      });
+    }
+
+    function submitScore() {
+      const username = document.getElementById('usernameInput').value;
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      scores.push({ username: username, score: parseInt(score) });
+      localStorage.setItem('snakeScores', JSON.stringify(scores));
+      displayScores();
+    }
+
+    // Keyboard event listener
+    document.addEventListener('keydown', function(event) {
+      if ((event.keyCode === 37 || event.key === 'a') && dx !== box) { // Left
+        dx = -box;
+        dy = 0;
+      } else if ((event.keyCode === 39 || event.key === 'd') && dx !== -box) { // Right
+        dx = box;
+        dy = 0;
+      } else if ((event.keyCode === 38 || event.key === 'w') && dy !== box) { // Up
+        dx = 0;
+        dy = -box;
+      } else if ((event.keyCode === 40 || event.key === 's') && dy !== -box) { // Down
+        dx = 0;
+        dy = box;
+      }
+
+      if (event.key === 'p' || event.key === 'P') { // Pause/unpause
+        paused = !paused;
+      }
+
+      if (event.key === 'r' || event.key === 'R') { // Reload game
+        location.reload();
+      }
+    });
+
+    // Initialize game
+    loadGame(); // Load saved game if available
+    displayScores(); // Display leaderboard
+    setInterval(update, 69); // Main game loop
+  </script>
+</body>
+</html>
