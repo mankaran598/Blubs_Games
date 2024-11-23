@@ -11,30 +11,56 @@
     #gameCanvas {
       border: 5px solid black;
     }
-    #zoomWarning {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(255, 0, 0, 0.8);
-      color: white;
-      padding: 20px;
-      border-radius: 8px;
+    .leaderboard {
+      margin-top: 20px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
       text-align: center;
-      z-index: 1000;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    button {
+      margin: 10px;
     }
   </style>
 </head>
 <body>
-  <div id="zoomWarning">
-    Your screen is too small to display the full game.<br>
-    Please zoom out to 50% or 33%.
-  </div>
-
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <button onclick="saveGame()" style="font-size: 20px; padding: 20px 20px;">Save Game</button>
+  <a href="firstver.html"><button style="font-size: 20px; padding: 20px 20px;">Click here to play the first version of the game</button></a>
+
+  <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Leaderboard rows will be dynamically added here -->
+        <tr>
+          <td colspan="3">No scores yet</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <input type="text" id="usernameInput" placeholder="Enter your username">
+  <button onclick="submitScore()">Submit Score</button>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -112,6 +138,7 @@
         clearInterval(gameLoop);
         localStorage.removeItem('savedGame'); // Clear saved game if the player dies
         alert('Game Over! Your score is ' + score);
+        displayScores();
       }
     }
 
@@ -151,6 +178,31 @@
       }
     }
 
+    // Leaderboard
+    function displayScores() {
+      const leaderboardBody = document.getElementById('leaderboardBody');
+      leaderboardBody.innerHTML = '';
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      scores.sort((a, b) => b.score - a.score);
+      scores.forEach((entry, index) => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${entry.username}</td>
+          <td>${entry.score}</td>
+        `;
+        leaderboardBody.appendChild(newRow);
+      });
+    }
+
+    function submitScore() {
+      const username = document.getElementById('usernameInput').value;
+      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
+      scores.push({ username: username, score: parseInt(score) });
+      localStorage.setItem('snakeScores', JSON.stringify(scores));
+      displayScores();
+    }
+
     // Keyboard event listener
     document.addEventListener('keydown', function(event) {
       if ((event.keyCode === 37 || event.key === 'a') && dx !== box) { // Left
@@ -174,6 +226,7 @@
 
     // Initialize game
     loadGame(); // Load saved game if available
+    displayScores(); // Display leaderboard
     gameLoop = setInterval(update, 69);
   </script>
 </body>
