@@ -58,10 +58,9 @@
 
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
-  <button onclick="saveGame()" style="font-size: 20px; padding: 20px 20px;">Save Game</button>
   <a href="firstver.html"><button style="font-size: 20px; padding: 20px 20px;">Click here to play the first version of the game</button></a>
-  <a href="snakedark.html"><button style="font-size: 20px; padding: 20px 20px;">Switch to Dark Mode</button></a>
    <p><b><h1>The yellow pixel is the head and the red pixel is the food</h1></b></p>
+ <p><b><h1>The yellow pixel is the head and the red pixel is the food</h1></b></p>
   <div class="leaderboard">
     <h2>Leaderboard</h2>
     <table>
@@ -99,6 +98,16 @@
     let directionChanged = false;
     let paused = false;
     let gameOver = false;
+
+    // Auto-save interval in milliseconds (adjust as needed)
+    const AUTO_SAVE_INTERVAL = 5000; // 5 seconds
+
+    function autoSaveGame() {
+      if (!gameOver) {
+        saveGame();
+        console.log('Game auto-saved!');
+      }
+    }
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -223,7 +232,7 @@
         dy: dy
       };
       localStorage.setItem('savedGame', JSON.stringify(gameState));
-      alert('Game saved!');
+      console.log('Game saved manually!');
     }
 
     // Load function
@@ -299,6 +308,7 @@
 
     loadGame();
     setInterval(update, 100);
+    setInterval(autoSaveGame, 5000); // Auto-save every 5 seconds
     displayScores();
   </script>
 </body>
