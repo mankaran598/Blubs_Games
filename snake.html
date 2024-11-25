@@ -297,24 +297,18 @@
       const currentTime = Date.now();
 
       if (currentTime - lastKeyPressTime >= KEY_PRESS_DELAY) {
-        if (!directionChanged) {
-          if ((event.key === 'ArrowLeft' || event.key === 'a') && lastDx !== box) {
-            dx = -box;
-            dy = 0;
-            directionChanged = true;
-          } else if ((event.key === 'ArrowRight' || event.key === 'd') && lastDx !== -box) {
-            dx = box;
-            dy = 0;
-            directionChanged = true;
-          } else if ((event.key === 'ArrowUp' || event.key === 'w') && lastDy !== box) {
-            dx = 0;
-            dy = -box;
-            directionChanged = true;
-          } else if ((event.key === 'ArrowDown' || event.key === 's') && lastDy !== -box) {
-            dx = 0;
-            dy = box;
-            directionChanged = true;
-          }
+        if ((event.key === 'ArrowLeft' || event.key === 'a') && lastDx !== box) {
+          dx = -box;
+          dy = 0;
+        } else if ((event.key === 'ArrowRight' || event.key === 'd') && lastDx !== -box) {
+          dx = box;
+          dy = 0;
+        } else if ((event.key === 'ArrowUp' || event.key === 'w') && lastDy !== box) {
+          dx = 0;
+          dy = -box;
+        } else if ((event.key === 'ArrowDown' || event.key === 's') && lastDy !== -box) {
+          dx = 0;
+          dy = box;
         }
 
         if (event.key === 'p' || event.key === 'P') {
