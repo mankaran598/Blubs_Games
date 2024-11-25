@@ -57,7 +57,7 @@
   </div>
 
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
-  <button onclick="location.reload();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
+  <button onclick="restartGame();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
   <a href="firstver.html"><button style="font-size: 20px; padding: 20px 20px;">Click here to play the first version of the game</button></a>
   <p><b><h1>The yellow pixel is the head and the red pixel is the food</h1></b></p>
   <div class="leaderboard">
@@ -270,9 +270,25 @@
 
     function submitScore() {
       const username = document.getElementById('usernameInput').value;
+      if (!username) {
+        alert('Please enter your username.');
+        return;
+      }
+
       const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
       scores.push({ username: username, score: parseInt(score) });
       localStorage.setItem('snakeScores', JSON.stringify(scores));
+      displayScores();
+    }
+
+    function restartGame() {
+      // Keep the saved scores, but reset game state
+      gameOver = false;
+      score = 0;
+      snake = [{x: 200, y: 200}];
+      randomFood();
+      loadGame();
+      paused = false;
       displayScores();
     }
 
@@ -306,7 +322,7 @@
         }
 
         if (event.key === 'r' || event.key === 'R') {
-          location.reload();
+          restartGame(); // Handle restart without clearing scores
         }
 
         lastKeyPressTime = currentTime;
