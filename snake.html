@@ -98,18 +98,6 @@
     let directionChanged = false;
     let paused = false;
     let gameOver = false;
-    const KEY_PRESS_DELAY = 150; // Prevent fast key glitch by adding a delay between key presses
-    let lastKeyPressTime = 0;
-
-    // Auto-save interval in milliseconds (adjust as needed)
-    const AUTO_SAVE_INTERVAL = 5000; // 5 seconds
-
-    function autoSaveGame() {
-      if (!gameOver) {
-        saveGame();
-        console.log('Game auto-saved!');
-      }
-    }
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -237,6 +225,21 @@
       console.log('Game saved manually!');
     }
 
+    // Auto-save every second
+    function autoSaveGame() {
+      if (!gameOver) {
+        const gameState = {
+          snake: snake,
+          food: food,
+          score: score,
+          dx: dx,
+          dy: dy
+        };
+        localStorage.setItem('savedGame', JSON.stringify(gameState));
+        console.log('Game auto-saved!');
+      }
+    }
+
     // Load function
     function loadGame() {
       const savedGame = JSON.parse(localStorage.getItem('savedGame'));
@@ -283,57 +286,55 @@
     }
 
     function restartGame() {
-      // Keep the saved scores, but reset game state
-      gameOver = false;
-      score = 0;
-      snake = [{x: 200, y: 200}];
-      randomFood();
-      loadGame();
-      paused = false;
-      displayScores();
+      location.reload();
     }
 
+    // Clear saved data
     function clearSaves() {
-      localStorage.removeItem('snakeScores');
-      localStorage.removeItem('savedGame');
-      alert('All saved data cleared!');
-      displayScores(); // Update the leaderboard view after clearing
+      if (confirm('Are you sure you want to clear all saved data?')) {
+        localStorage.removeItem('snakeScores');
+        localStorage.removeItem('savedGame');
+        alert('All saved data cleared!');
+        displayScores(); // Update the leaderboard view after clearing
+      }
     }
 
     // Keyboard event listener
     document.addEventListener('keydown', function(event) {
-      const currentTime = Date.now();
-
-      if (currentTime - lastKeyPressTime >= KEY_PRESS_DELAY) {
-        if ((event.key === 'ArrowLeft' || event.key === 'a') && lastDx !== box) {
+      if (event.key === 'ArrowLeft' || event.key === 'a') {
+        if (lastDx !== box) {
           dx = -box;
           dy = 0;
-        } else if ((event.key === 'ArrowRight' || event.key === 'd') && lastDx !== -box) {
+        }
+      } else if (event.key === 'ArrowRight' || event.key === 'd') {
+        if (lastDx !== -box) {
           dx = box;
           dy = 0;
-        } else if ((event.key === 'ArrowUp' || event.key === 'w') && lastDy !== box) {
+        }
+      } else if (event.key === 'ArrowUp' || event.key === 'w') {
+        if (lastDy !== box) {
           dx = 0;
           dy = -box;
-        } else if ((event.key === 'ArrowDown' || event.key === 's') && lastDy !== -box) {
+        }
+      } else if (event.key === 'ArrowDown' || event.key === 's') {
+        if (lastDy !== -box) {
           dx = 0;
           dy = box;
         }
+      }
 
-        if (event.key === 'p' || event.key === 'P') {
-          paused = !paused;
-        }
+      if (event.key === 'p' || event.key === 'P') {
+        paused = !paused;
+      }
 
-        if (event.key === 'r' || event.key === 'R') {
-          restartGame(); // Handle restart without clearing scores
-        }
-
-        lastKeyPressTime = currentTime;
+      if (event.key === 'r' || event.key === 'R') {
+        restartGame(); // Reload the page to restart the game
       }
     });
 
     loadGame();
     setInterval(update, 60); // Faster speed (60ms)
-    setInterval(autoSaveGame, AUTO_SAVE_INTERVAL); // Auto-save every 5 seconds
+    setInterval(autoSaveGame, 2000); // Auto-save every 1 second
     displayScores();
   </script>
 </body>
