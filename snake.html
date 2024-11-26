@@ -98,6 +98,7 @@
     let directionChanged = false;
     let paused = false;
     let gameOver = false;
+    let gameStarted = false; // Track if the game has started
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -225,9 +226,9 @@
       console.log('Game saved manually!');
     }
 
-    // Auto-save every second
+    // Auto-save only after game starts
     function autoSaveGame() {
-      if (!gameOver) {
+      if (gameStarted) {
         const gameState = {
           snake: snake,
           food: food,
@@ -305,21 +306,25 @@
         if (lastDx !== box) {
           dx = -box;
           dy = 0;
+          if (!gameStarted) gameStarted = true; // Mark game as started
         }
       } else if (event.key === 'ArrowRight' || event.key === 'd') {
         if (lastDx !== -box) {
           dx = box;
           dy = 0;
+          if (!gameStarted) gameStarted = true; // Mark game as started
         }
       } else if (event.key === 'ArrowUp' || event.key === 'w') {
         if (lastDy !== box) {
           dx = 0;
           dy = -box;
+          if (!gameStarted) gameStarted = true; // Mark game as started
         }
       } else if (event.key === 'ArrowDown' || event.key === 's') {
         if (lastDy !== -box) {
           dx = 0;
           dy = box;
+          if (!gameStarted) gameStarted = true; // Mark game as started
         }
       }
 
@@ -334,7 +339,7 @@
 
     loadGame();
     setInterval(update, 60); // Faster speed (60ms)
-    setInterval(autoSaveGame, 2000); // Auto-save every 1 second
+    setInterval(autoSaveGame, 1000); // Auto-save every 1 second
     displayScores();
   </script>
 </body>
