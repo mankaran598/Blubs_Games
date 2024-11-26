@@ -48,6 +48,18 @@
     button {
       margin: 10px;
     }
+    #cheatMessage {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(0, 255, 0, 0.7);
+      color: white;
+      font-size: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
@@ -58,6 +70,7 @@
 
   <canvas id="gameCanvas" width="1500" height="900"></canvas>
   <button onclick="restartGame();" style="font-size: 20px; padding: 20px 20px;">Restart The Game</button>
+  <button onclick="clearSaves();" style="font-size: 20px; padding: 20px 20px;">Clear Saved Data</button>
   <a href="firstver.html"><button style="font-size: 20px; padding: 20px 20px;">Click here to play the first version of the game</button></a>
   <p><b><h1>The yellow pixel is the head and the red pixel is the food</h1></b></p>
   <div class="leaderboard">
@@ -80,10 +93,13 @@
   <input type="text" id="usernameInput" placeholder="Enter your username">
   <button onclick="submitScore()">Submit Score</button>
 
+  <div id="cheatMessage">Cheat Activated! +100 Score</div>
+
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const zoomWarning = document.getElementById('zoomWarning');
+    const cheatMessage = document.getElementById('cheatMessage');
 
     // Game variables
     const box = 20;
@@ -98,6 +114,8 @@
     let paused = false;
     let gameOver = false;
     let gameStarted = false; // Track if the game has started
+
+    let cheatCode = ''; // Track the cheat code input
 
     function checkCanvasVisibility() {
       const canvasRect = canvas.getBoundingClientRect();
@@ -249,53 +267,27 @@
         score = savedGame.score;
         dx = savedGame.dx;
         dy = savedGame.dy;
-        paused = true;
+        gameStarted = true;
       } else {
         randomFood();
       }
     }
 
-    // Leaderboard
-    function displayScores() {
-      const leaderboardBody = document.getElementById('leaderboardBody');
-      leaderboardBody.innerHTML = '';
-      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      scores.sort((a, b) => b.score - a.score);
-      scores.forEach((entry, index) => {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${entry.username}</td>
-          <td>${entry.score}</td>
-        `;
-        leaderboardBody.appendChild(newRow);
-      });
-    }
+    // Cheat code handling
+    function handleCheatCode(event) {
+      const cheatSequence = '1212ab';
+      cheatCode += event.key;
 
-    function submitScore() {
-      const username = document.getElementById('usernameInput').value;
-      if (!username) {
-        alert('Please enter your username.');
-        return;
+      if (cheatCode.endsWith(cheatSequence)) {
+        score += 100;
+        cheatMessage.style.display = 'block';
+        setTimeout(() => cheatMessage.style.display = 'none', 2000);
+        cheatCode = ''; // Reset the cheat code
       }
 
-      const scores = JSON.parse(localStorage.getItem('snakeScores')) || [];
-      scores.push({ username: username, score: score });
-      localStorage.setItem('snakeScores', JSON.stringify(scores));
-      displayScores();
-    }
-
-    function restartGame() {
-      location.reload();
-    }
-
-    // Clear saved data
-    function clearSaves() {
-      if (confirm('Are you sure you want to clear all saved data?')) {
-        localStorage.removeItem('snakeScores');
-        localStorage.removeItem('savedGame');
-        alert('All saved data cleared!');
-        displayScores(); // Update the leaderboard view after clearing
+      // Keep only the last characters of the cheat code sequence
+      if (cheatCode.length > cheatSequence.length) {
+        cheatCode = cheatCode.slice(1);
       }
     }
 
@@ -334,12 +326,13 @@
       if (event.key === 'r' || event.key === 'R') {
         restartGame(); // Reload the page to restart the game
       }
+
+      handleCheatCode(event);
     });
 
     loadGame();
     setInterval(update, 60); // Faster speed (60ms)
     setInterval(autoSaveGame, 1000); // Auto-save every 1 second
-    displayScores();
   </script>
 </body>
 </html>
