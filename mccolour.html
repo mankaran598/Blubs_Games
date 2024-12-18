@@ -1,0 +1,31 @@
+<html>
+  <head><title>Minecraft Colour Symbol</title></head>
+  <style>
+    body {
+      background:grey;
+    }
+  </style>
+  <centre><h1><b>Minecraft Colour Symbol</b></h1></centre>
+  <p>The Mincraft Colour Symbol Is §</p>
+  <!--input-->
+  <input type="text" value="§" id="myInput" readonly>
+    <button onclick="copyText()">Copy Text</button>
+
+  <script>
+    function copyText() {
+      // Get the input field
+      var copyText = document.getElementById("myInput");
+
+      // Select the text field
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+
+      // Copy the text inside the input
+      document.execCommand("copy");
+
+      // Alert the copied text
+      alert("Copied the text: " + copyText.value);
+    }
+  </script>
+  <p></p>
+</html>
